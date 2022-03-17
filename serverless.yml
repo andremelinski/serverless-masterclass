@@ -17,4 +17,4 @@ functions:
   hello:
     handler: src/handler.randomNumber
     timeout: 60 #seconds
-    memory: 128 #mb
+    memorySize: 128 #mb
