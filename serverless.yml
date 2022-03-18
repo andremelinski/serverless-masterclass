@@ -1,4 +1,4 @@
-service: basic
+service: s3-node-fileupload-serverless
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -13,8 +13,23 @@ provider:
   stage: dev
   region: us-east-1
 
+# writing s3 bucket name
+custom:
+  fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}
+
+# creating the bucket
+resources:
+  Resources:
+    FileBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.fileUploadBucketName}
+        AccessControl: PublicRead
+        VersioningConfiguration:
+          Status: Enabled
+
 functions:
   hello:
     handler: src/handler.randomNumber
     timeout: 60 #seconds
-    memorySize: 128 #mb
+    # memorySize: 128 #mb
