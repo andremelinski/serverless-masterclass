@@ -34,15 +34,13 @@ functions:
   s3FileUploader:
     handler: src/upload.handler
     name: s3-file-uploader
-    description: Lambda that will upload files into S3
-    timeout: 60 #seconds
-    memorySize: 128 #mb
-    # method using from API  Gateway
-    events: 
+    description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
+    timeout: 60 # seconds
+    memorySize: 128 # mb
+    events:
       - http:
           path: images
           method: POST
-    # lambda can only add objects into S3 
     iamRoleStatements:
       - Effect: Allow
         Action:
