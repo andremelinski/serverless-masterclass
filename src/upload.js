@@ -1,37 +1,38 @@
 "use strict";
-require("dotenv").config()
+require("dotenv").config();
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
-const buketName = process.env.FILE_UPLOAD_BUCKET_NAME;
 
-module.exports.handler = (event) => {
+const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
+
+module.exports.handler = async (event) => {
   console.log(event);
-  // proxy integration because we're using API Gateway
+
   const response = {
-    isBase64: false,
+    isBase64Encoded: false,
     statusCode: 200,
-    body: JSON.stringify({ message: "successfully uploaded" }),
+    body: JSON.stringify({ message: "Successfully uploaded file to S3" }),
   };
 
   try {
-    const parseBody = JSON.parse(event.body);
-    const base64File = parseBody.file;
-    const decodedFile = Buffer.from(base64File.replace(/^data:image\/\w+;base64,/,""), base64)
-    
+    const parsedBody = JSON.parse(event.body);
+    const base64File = parsedBody.file;
+    const decodedFile = Buffer.from(base64File.replace(/^data:image\/\w+;base64,/, ""), "base64");
     const params = {
-      BucketName: buketName,
+      Bucket: BUCKET_NAME,
       Key: `images/${new Date().toISOString()}.jpeg`,
       Body: decodedFile,
-      ContentType: "image/jpeg"
-    }
+      ContentType: "image/jpeg",
+    };
 
     const uploadResult = await s3.upload(params).promise();
 
-    response.body = { message: "successfully uploaded", uploadResult }
-  } catch (error) {
-    console.log(error);
-    response.body = JSON.stringify({ message: "upload failed"})
-    response.statusCode = 500
+    response.body = JSON.stringify({ message: "Successfully uploaded file to S3", uploadResult });
+  } catch (e) {
+    console.error(e);
+    response.body = JSON.stringify({ message: "File failed to upload", errorMessage: e });
+    response.statusCode = 500;
   }
-  return response
+
+  return response;
 };
