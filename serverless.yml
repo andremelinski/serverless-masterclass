@@ -16,8 +16,6 @@ provider:
 # granularity permissions using a plugin
 plugins:
   - serverless-iam-roles-per-function
-
-# writing s3 bucket name
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}
 
