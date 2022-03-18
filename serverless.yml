@@ -1,11 +1,4 @@
 service: s3-node-fileupload-serverless
-# app and org for use with dashboard.serverless.com
-#app: your-app-name
-#org: your-org-name
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-frameworkVersion: '3'
 
 provider:
   name: aws
@@ -13,22 +6,11 @@ provider:
   stage: dev
   region: us-east-1
 
-# granularity permissions using a plugin
-plugins:
-  - serverless-iam-roles-per-function
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}
 
-# creating the bucket
-resources:
-  Resources:
-    FileBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.fileUploadBucketName}
-        AccessControl: PublicRead
-        VersioningConfiguration:
-          Status: Enabled
+plugins:
+  - serverless-iam-roles-per-function
 
 functions:
   s3FileUploader:
@@ -48,4 +30,12 @@ functions:
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
     environment:
       FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+
+resources:
+  Resources:
+    FileBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.fileUploadBucketName}
+        AccessControl: PublicRead
     
