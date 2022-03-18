@@ -1,9 +1,8 @@
 {
-  "dependencies": {
-    "aws-sdk": "^2.1095.0",
-    "dotenv": "^16.0.0"
-  },
   "devDependencies": {
-    "serverless-iam-roles-per-function": "^3.2.0"
+    "serverless-iam-roles-per-function": "^3.1.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.846.0"
   }
 }

@@ -11,6 +11,7 @@ custom:
 
 plugins:
   - serverless-iam-roles-per-function
+
 functions:
   s3FileUploader:
     handler: src/upload.handler
@@ -37,4 +38,3 @@ resources:
       Properties:
         BucketName: ${self:custom.fileUploadBucketName}
         AccessControl: PublicRead
-    
