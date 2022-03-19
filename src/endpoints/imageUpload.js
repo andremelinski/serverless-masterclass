@@ -1,13 +1,15 @@
 import ApiResponses from '../common/API_Responses.js';
 import * as fileType from 'file-type';
-import { v5 } from "uuid";
-import * as AWS from 'aws-sdk';
-const s3 = new AWS.S3();
+import { v4 as uuid } from "uuid";
+// import * as AWS from 'aws-sdk';
+import AWS from 'aws-sdk';
 import dotenv from 'dotenv'
 dotenv.config()
 
-const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
+const { S3 } = AWS;
+const s3 = new S3();
 
+const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 const allowedMimes = ["image/jpeg", "image/png", "image/gif"];
 export async function handler(event) {
   try {
@@ -30,7 +32,7 @@ export async function handler(event) {
 
     if (detectedMime !== body.mime) return ApiResponses._400({ message: "detectedMime !== body.mime" });
 
-    const fileName = `images/${new Date().toISOString()}-${v5()}-${detectedExt}`;
+    const fileName = `images/${new Date().toISOString()}-${uuid()}-${detectedExt}`;
     const params = {
         Bucket: BUCKET_NAME,
         Key: `images/${fileName}`,
@@ -40,7 +42,7 @@ export async function handler(event) {
     };
 
     const s3File = await s3.putObject(params).promise();
-
+    console.log(s3File)
     // https://BUCKET_NAME.s3-${region}.amazonaws.com/images/${fileName}
 
     return ApiResponses._200({ image: JSON.stringify(s3File, null, 2) });
