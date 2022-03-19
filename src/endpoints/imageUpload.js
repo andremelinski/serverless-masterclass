@@ -14,6 +14,7 @@ const allowedMimes = ["image/jpeg", "image/png", "image/gif"];
 export async function handler(event) {
   try {
     console.log(BUCKET_NAME);
+    console.log(event)
     const body = JSON.parse(event.body);
     let { image: imageData = "" } = body;
     
