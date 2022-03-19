@@ -1,4 +1,4 @@
-service: s3-node-fileupload-serverless
+service: s3-node-fileupload-serverless-test
 
 provider:
   name: aws
