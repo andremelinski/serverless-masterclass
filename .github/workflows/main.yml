@@ -31,7 +31,7 @@ jobs:
         path: |
           '**/node_modules'
           '**/.eslintcache'
-          key: ${{ runner.os }}-deps-${{ hashFiles('package-lock.json')}}
+        key: ${{ runner.os }}-deps-${{ hashFiles('package-lock.json')}}
     # install packages
     # https://www.geeksforgeeks.org/difference-between-npm-i-and-npm-ci-in-node-js/
     # - run: npm ci
