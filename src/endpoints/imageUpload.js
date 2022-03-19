@@ -26,10 +26,11 @@ export async function handler(event) {
 
     const buffer = Buffer.from(imageData, "base64");
     const fileInfo = await fileType.fromBuffer(buffer);
+    console.log(fileInfo);
 
     const detectedExt = fileInfo.ext;
     const detectedMime = fileInfo.mime;
-
+    console.log({detectedExt, detectedMime});
     if (detectedMime !== body.mime) return ApiResponses._400({ message: "detectedMime !== body.mime" });
 
     const fileName = `${new Date().toISOString()}-${uuid()}-${detectedExt}`;
@@ -48,6 +49,7 @@ export async function handler(event) {
     return ApiResponses._200({ image: JSON.stringify(s3File, null, 2) });
     
   } catch (error) {
+      console.log(error);
     return ApiResponses._404({ message: JSON.stringify(error, null, 2) });
   }
 }
