@@ -1,4 +1,4 @@
-const Responses = require("../common/responses");
+import Responses from '../common/API_Responses';
 const fileType = require("file-type");
 const uuid = require("uuid");
 const AWS = require("aws-sdk");
