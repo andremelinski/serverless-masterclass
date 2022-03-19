@@ -27,7 +27,6 @@ export async function handler(event) {
 
     const buffer = Buffer.from(imageData, "base64");
     const fileInfo = await fileType.fromBuffer(buffer);
-    console.log(fileInfo);
 
     const detectedExt = fileInfo.ext;
     const detectedMime = fileInfo.mime;
