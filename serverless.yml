@@ -14,7 +14,7 @@ plugins:
 
 functions:
   s3FileUploader:
-    handler: src/upload.handler
+    handler: src/imagesUpload.handler
     name: s3-file-uploader
     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
     timeout: 60 # seconds
@@ -24,6 +24,7 @@ functions:
       - http:
           path: images
           method: POST
+          cors: true
     # this lambda will only add file into S3 
     iamRoleStatements:
       - Effect: Allow
