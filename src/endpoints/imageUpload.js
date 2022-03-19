@@ -14,17 +14,17 @@ const allowedMimes = ["image/jpeg", "image/png", "image/gif"];
 export async function handler(event) {
   try {
     console.log(BUCKET_NAME);
-    console.log(event);
     const body = JSON.parse(event.body);
     let { image: imageData = "" } = body;
-
+    
     if (!body || !imageData || !body.mime) return ApiResponses._400({ message: "Incorrect body on request" });
     if (!allowedMimes.includes(body.mime)) return ApiResponses._400({ message: "Incorrect mime type" });
-
+    
     if (imageData.image.substr(0, 7) === "base64") {
-      imageData = imageData.substr(7, imageData.length);
+        imageData = imageData.substr(7, imageData.length);
     }
-
+    
+    return ApiResponses._200({ imageData, event, BUCKET_NAME });
     const buffer = Buffer.from(imageData, "base64");
     const fileInfo = await fileType.fromBuffer(buffer);
 
