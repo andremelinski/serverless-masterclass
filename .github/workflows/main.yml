@@ -34,8 +34,8 @@ jobs:
         key: ${{ runner.os }}-deps-${{ hashFiles('package-lock.json')}}
     # install packages
     # https://www.geeksforgeeks.org/difference-between-npm-i-and-npm-ci-in-node-js/
-    # - run: npm ci
-    - run: npm i
+    - run: npm ci
+    # - run: npm i
     #  deploy app
     - name: serverless deploy
       uses: serverless/github-action@v3
