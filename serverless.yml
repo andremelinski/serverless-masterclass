@@ -19,10 +19,12 @@ functions:
     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
     timeout: 60 # seconds
     memorySize: 128 # mb
+    # API GATEWAY
     events:
       - http:
           path: images
           method: POST
+    # this lambda will only add file into S3 
     iamRoleStatements:
       - Effect: Allow
         Action:

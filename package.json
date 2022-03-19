@@ -3,6 +3,7 @@
     "serverless-iam-roles-per-function": "^3.1.0"
   },
   "dependencies": {
-    "aws-sdk": "^2.846.0"
+    "aws-sdk": "^2.846.0",
+    "serverless-webpack": "^5.6.1"
   }
 }
