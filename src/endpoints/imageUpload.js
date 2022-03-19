@@ -15,12 +15,14 @@ export async function handler(event) {
   try {
     console.log(BUCKET_NAME);
     console.log(event)
+    if(!event.body) return ApiResponses._400({ message: event });
+
     const body = JSON.parse(event.body);
-    let { image: imageData = "" } = body;
     
     if (!body || !imageData || !body.mime) return ApiResponses._400({ message: "Incorrect body on request" });
     if (!allowedMimes.includes(body.mime)) return ApiResponses._400({ message: "Incorrect mime type" });
     
+    let imageData = body.image;
     if (imageData.image.substr(0, 7) === "base64") {
         imageData = imageData.substr(7, imageData.length);
     }
@@ -51,6 +53,6 @@ export async function handler(event) {
     
   } catch (error) {
       console.log(error);
-    return ApiResponses._404({ message: JSON.stringify(error, null, 2) });
+    return ApiResponses._404({ message: error.message });
   }
 }
