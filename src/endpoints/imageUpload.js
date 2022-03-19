@@ -32,7 +32,7 @@ export async function handler(event) {
 
     if (detectedMime !== body.mime) return ApiResponses._400({ message: "detectedMime !== body.mime" });
 
-    const fileName = `images/${new Date().toISOString()}-${uuid()}-${detectedExt}`;
+    const fileName = `${new Date().toISOString()}-${uuid()}-${detectedExt}`;
     const params = {
         Bucket: BUCKET_NAME,
         Key: `images/${fileName}`,
