@@ -55,6 +55,6 @@ exports.handler = async event => {
     } catch (error) {
         console.log('error', error);
 
-        return ApiResponses._404({ message: error.message, event: JSON.parse(event.body) });
+        return ApiResponses._404({ message: error.message, event: event.body });
     }
 };

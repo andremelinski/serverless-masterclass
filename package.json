@@ -1,9 +1,7 @@
 {
   "main": "webpack.config.js",
   "devDependencies": {
-    "serverless-iam-roles-per-function": "^3.2.0",
-    "serverless-webpack": "^5.6.1",
-    "webpack": "^5.70.0"
+    "serverless-iam-roles-per-function": "^3.2.0"
   },
   "dependencies": {
     "aws-sdk": "^2.846.0",
