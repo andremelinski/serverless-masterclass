@@ -14,7 +14,7 @@ plugins:
 
 functions:
   s3FileUploader:
-    handler: src/endpoints/imageUpload.handler
+    handler: src/upload.handler
     name: s3-file-uploader
     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
     timeout: 60 # seconds
@@ -26,16 +26,16 @@ functions:
           method: POST
           cors: true
     # this lambda will only add file into S3 
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - "s3:Put*"
-    #     Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
     iamRoleStatements:
       - Effect: Allow
         Action:
-            - s3:*
-        Resource: '*'
+          - "s3:Put*"
+        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    # iamRoleStatements:
+    #   - Effect: Allow
+    #     Action:
+    #         - s3:*
+    #     Resource: '*'
     environment:
       FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
 
