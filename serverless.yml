@@ -11,7 +11,6 @@ custom:
 
 plugins:
   - serverless-iam-roles-per-function
-  # - serverless-plugin-webpack
 
 functions:
   s3FileUploader:
@@ -19,7 +18,7 @@ functions:
     name: s3-file-uploader
     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
     timeout: 60 # seconds
-    memorySize: 128 # mb
+    # memorySize: 128 # mb
     # API GATEWAY
     events:
       - http:
