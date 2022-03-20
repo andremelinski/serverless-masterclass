@@ -11,7 +11,7 @@ module.exports.handler = async (event) => {
         body: JSON.stringify({ message: event }),
     };
 
-    // try {
+    try {
         const parsedBody = Buffer(event.body, 'base64');
     //     const decodedFile = Buffer.from(base64File.replace(/^data:image\/\w+;base64,/, ""), "base64");
     //     const params = {
@@ -23,12 +23,12 @@ module.exports.handler = async (event) => {
 
     //     const uploadResult = await s3.upload(params).promise();
 
-    //     response.body = JSON.stringify({ message: "Successfully uploaded file to S3", uploadResult });
-    // } catch (e) {
-    //     console.error(e);
-    //     response.body = JSON.stringify({ message: "File failed to upload", errorMessage: e });
-    //     response.statusCode = 500;
-    // }
+        response.body = JSON.stringify({ message: "Successfully uploaded file to S3", parsedBody });
+    } catch (e) {
+        console.error(e);
+        response.body = JSON.stringify({ message: "File failed to upload", errorMessage: e });
+        response.statusCode = 500;
+    }
 
-    return parsedBody;
+    return response;
 };
