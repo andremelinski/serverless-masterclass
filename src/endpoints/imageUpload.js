@@ -1,45 +1,38 @@
-const fileType = import('file-type');
-const ApiResponses = require('../common/API_Responses');
-const uuid = require('uuid').v4();
-const AWS = require('aws-sdk');
-require('dotenv').config()
 
+
+const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
+
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
-const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jpeg'];
-exports.handler = async event => {
+
+module.exports.handler = async (event) => {
+    console.log(event);
+
+    const response = {
+        isBase64Encoded: false,
+        statusCode: 200,
+        body: JSON.stringify({ message: "Successfully uploaded file to S3" }),
+    };
+
     try {
-        
         const parsedBody = JSON.parse(event.body);
         const base64File = parsedBody.file;
         const decodedFile = Buffer.from(base64File.replace(/^data:image\/\w+;base64,/, ""), "base64");
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: `images/${new Date().toISOString()}.jpeg`,
+            Body: decodedFile,
+            ContentType: "image/jpeg",
+        };
 
-        const fileInfo = await fileType.fromBuffer(buffer);
-        const detectedExt = fileInfo.ext;
-        const detectedMime = fileInfo.mime;
-        // if (detectedMime !== body.mime) {
-        //     return ApiResponses._400({ message: 'mime types dont match' });
-        // }
+        const uploadResult = await s3.upload(params).promise();
 
-        const fileName = `${uuid()}-${new Date().toISOString()}-${decodedFile}-${detectedExt}-${detectedMime}`;
-
-        // const bla = await s3
-        //     .putObject({
-        //         Body: decodedFile,
-        //         Key: `images/${fileName}`,
-        //         ContentType: body.mime,
-        //         Bucket: BUCKET_NAME,
-        //         ACL: 'public-read',
-        //     })
-        //     .promise();
-
-        // const url = `https://${BUCKET_NAME}.s3-${process.env.region}.amazonaws.com/${key}`;
-        return ApiResponses._200({
-            imageURL:  fileName,
-        });
-    } catch (error) {
-        console.log('error', error);
-
-        return ApiResponses._404({ message: error.message, event: event });
+        response.body = JSON.stringify({ message: "Successfully uploaded file to S3", uploadResult });
+    } catch (e) {
+        console.error(e);
+        response.body = JSON.stringify({ message: "File failed to upload", errorMessage: e });
+        response.statusCode = 500;
     }
+
+    return response;
 };
