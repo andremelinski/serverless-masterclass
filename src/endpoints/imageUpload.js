@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const s3 = new AWS.S3();
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
-const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
+const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jpeg'];
 exports.handler = async event => {
     try {
         
