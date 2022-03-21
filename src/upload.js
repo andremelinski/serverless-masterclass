@@ -20,13 +20,13 @@ module.exports.handler = async (event) => {
         // contentType = contentType.split(':')[1].trim()
         const filePath = `images/${uuid()}`
 
-        const params = {
-            Bucket: BUCKET_NAME,
-            Key: filePath,
-            Body: parsedBody,
-            ContentType: contentType,
-            ACL: 'public-read'
-        };
+        // const params = {
+        //     Bucket: BUCKET_NAME,
+        //     Key: filePath,
+        //     Body: parsedBody,
+        //     ContentType: contentType,
+        //     ACL: 'public-read'
+        // };
 
         const params1 = {
             Bucket: BUCKET_NAME,
@@ -37,7 +37,6 @@ module.exports.handler = async (event) => {
         };
 
         const uploadResult = await s3.upload(params).promise();
-        await s3.upload(params1).promise();
         const url = `https://${BUCKET_NAME}.s3-${REGION}.amazonaws.com/${filePath}`;
 
         response.body = JSON.stringify({ message: "File uploaded", uploadResult, params, url  });
