@@ -14,12 +14,11 @@ exports.handler = async (event) => {
         };
 
         if(key){
-            params.Key = key
+            params.Key = `${prefix}/${key}`
             const data = await s3.getObject(params).promise();
             return Responses._200({ data });
         }
 
-        params.Prefix = prefix
         const {Contents = []} = await s3.listObjectsV2(params).promise()
         const urls = Contents.flatMap(el => `https://${BUCKET_NAME}.s3.amazonaws.com/${el.Key}`)
         return Responses._200({ urls });
