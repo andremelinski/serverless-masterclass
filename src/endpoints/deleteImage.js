@@ -1,12 +1,22 @@
 const Responses = require('../common/API_Responses')
 require("dotenv").config()
-const {v4 : uuid} = require("uuid");
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 
-const REGION = process.env.REGION || "us-east-1";
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 
-const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
-const contentTypeRegex = /data:\s*(\w+\/\w+)/
-exports.handler = async (event) => {}
+exports.handler = async (event) => {
+    try {
+        const {key = '', prefix = ''} = event.queryStringParameters
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key = `${prefix}/${key}`
+        };
+
+		const deleteResult = await s3.deleteObject(params).promise();
+        return Responses._200({ message: "file deleted", deleteResult });
+    } catch (error) {
+        console.log('error', error);
+        return Responses._400({ message: error.message || 'failed to upload image' });
+    }
+}
