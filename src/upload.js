@@ -16,7 +16,10 @@ module.exports.handler = async (event) => {
     try {
         const parsedBody = JSON.parse(event.body);
         let base64File = parsedBody.file;
-        const [contentType] =  contentTypeRegex.exec(base64File)
+        
+        let [contentType] =  contentTypeRegex.exec(base64File)
+        contentType = contentType.replace('data:', '')
+
         base64File = Buffer.from(base64File.replace(/^data:image\/\w+;base64,/, ""), "base64");
         const filePath = `images/${uuid()}`
 
@@ -29,9 +32,9 @@ module.exports.handler = async (event) => {
         };
 
         const uploadResult = await s3.upload(params).promise();
-        const url = `https://${BUCKET_NAME}.s3-${REGION}.amazonaws.com/${filePath}`;
+        // const url = `https://${BUCKET_NAME}.s3-${REGION}.amazonaws.com/${filePath}`;
 
-        response.body = JSON.stringify({ message: "File uploaded", uploadResult, params, url  });
+        response.body = JSON.stringify({ message: "File uploaded", uploadResult, params });
     } catch (e) {
         console.error(e);
         response.body = JSON.stringify({ message: "File failed to upload", errorMessage: e });
