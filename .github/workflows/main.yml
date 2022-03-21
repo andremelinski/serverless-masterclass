@@ -4,7 +4,7 @@ name: Deploy File Upload Service
 # events but only for a branch
 on:
   push:
-    branches: [ s3-node-upload ]
+    branches: [ s3-node-serverless ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
