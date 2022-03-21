@@ -5,10 +5,23 @@ const s3 = new AWS.S3();
 
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 
-exports.handler = async () => {
+exports.handler = async (event) => {
 
     try{
-        const {Contents = []} = await s3.listObjectsV2({Bucket: BUCKET_NAME, Prefix: 'images'}).promise()
+        return event
+        const params = {
+            Bucket: BUCKET_NAME
+        };
+
+        if(event.pathParameters.fileKey){
+            
+            params.Key = decodeURIComponent(event.pathParameters.fileKey)
+            const data = await s3.getObject(params).promise();
+            return Responses._200({ urls });
+        }
+
+        params.Prefix = 'images'
+        const {Contents = []} = await s3.listObjectsV2(params).promise()
         const urls = Contents.flatMap(el => `https://${BUCKET_NAME}.s3.amazonaws.com/${el.Key}`)
         return Responses._200({ urls });
     } catch (error) {
