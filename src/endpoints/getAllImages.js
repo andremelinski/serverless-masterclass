@@ -15,7 +15,7 @@ exports.handler = async (event) => {
 
         if(key){
             params.Key = `${prefix}/${key}`
-            const data = await s3.getObject(params).promise();
+            const data = await s3.listObjects(params).promise();
             return Responses._200({ data });
         }
 
