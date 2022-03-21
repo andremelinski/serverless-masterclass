@@ -14,6 +14,7 @@ module.exports.handler = async (event) => {
     };
 
     try {
+        console.log(event.body)
         const parsedBody = Buffer.from(event.body, 'binary');
         let [contentType] =  contentTypeRegex.exec(event.body)
         contentType = contentType.split(':')[1].trim()
