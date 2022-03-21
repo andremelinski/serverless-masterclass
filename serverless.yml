@@ -8,6 +8,7 @@ provider:
 
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
+  region: ${self:provider.region}
 
 plugins:
   - serverless-iam-roles-per-function
@@ -33,6 +34,7 @@ functions:
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
     environment:
       FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+      REGION: ${self:custom.region}
 
 resources:
   Resources:
