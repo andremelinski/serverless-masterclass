@@ -71,12 +71,10 @@ functions:
         Action:
           - "s3:DeleteObject"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  
-  
-  
-    environment:
-      FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
-      REGION: ${self:custom.region}
+
+  environment:
+    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+    REGION: ${self:custom.region}
   
 
 resources:
