@@ -12,9 +12,7 @@ module.exports.handler = async (event) => {
 
     try {
         const parsedBody = Buffer.from(event.body, 'base64');
-        const fileInfo = await fileType.fromBuffer(parsedBody);
-        const detectedExt = fileInfo.ext;
-        const detectedMime = fileInfo.mime;
+
     //     const decodedFile = Buffer.from(base64File.replace(/^data:image\/\w+;base64,/, ""), "base64");
     //     const params = {
     //         Bucket: BUCKET_NAME,
@@ -25,7 +23,7 @@ module.exports.handler = async (event) => {
 
     //     const uploadResult = await s3.upload(params).promise();
 
-        response.body = JSON.stringify({ message: "Successfully uploaded file to S3", fileInfo });
+        response.body = JSON.stringify({ message: "Successfully uploaded file to S3", parsedBody, event: event.body });
     } catch (e) {
         console.error(e);
         response.body = JSON.stringify({ message: "File failed to upload", errorMessage: e });
