@@ -12,7 +12,7 @@ module.exports.handler = async (event) => {
 
     try {
         const parsedBody = Buffer.from(event.body, 'base64');
-        let contentType =  contentTypeRegex.exec(event.body)
+        let [contentType] =  contentTypeRegex.exec(event.body)
         contentType = contentType.split(':')[1].trim()
 
     //     const params = {
@@ -24,7 +24,7 @@ module.exports.handler = async (event) => {
 
     //     const uploadResult = await s3.upload(params).promise();
 
-        response.body = JSON.stringify({ message: "Successfully uploaded file to S3", parsedBody, contentType, BUCKET_NAME });
+        response.body = JSON.stringify({ parsedBody, contentType, BUCKET_NAME });
     } catch (e) {
         console.error(e);
         response.body = JSON.stringify({ message: "File failed to upload", errorMessage: e });
