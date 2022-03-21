@@ -10,8 +10,7 @@ exports.handler = async (event) => {
     try{
         const {key = '', prefix = ''} = event.queryStringParameters
         const params = {
-            Bucket: BUCKET_NAME,
-            Prefix: prefix
+            Bucket: BUCKET_NAME
         };
 
         if(key){
@@ -20,7 +19,7 @@ exports.handler = async (event) => {
             return Responses._200({ data });
         }
 
-        // params.Prefix = 'images'
+        params.Prefix = prefix
         const {Contents = []} = await s3.listObjectsV2(params).promise()
         const urls = Contents.flatMap(el => `https://${BUCKET_NAME}.s3.amazonaws.com/${el.Key}`)
         return Responses._200({ urls });
