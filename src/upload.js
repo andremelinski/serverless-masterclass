@@ -14,7 +14,7 @@ module.exports.handler = async (event) => {
     };
 
     try {
-        const parsedBody = Buffer.from(event.body, 'base64');
+        const parsedBody = Buffer.from(event.body, 'binary');
         let [contentType] =  contentTypeRegex.exec(event.body)
         contentType = contentType.split(':')[1].trim()
         const filePath = `images/${uuid()}.${contentType.split('/')[1]}`
