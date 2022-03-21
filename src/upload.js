@@ -28,7 +28,7 @@ module.exports.handler = async (event) => {
         //     ACL: 'public-read'
         // };
 
-        const params1 = {
+        const params = {
             Bucket: BUCKET_NAME,
             Key: `images/${uuid()}-aqui`,
             Body: parsedBody,
