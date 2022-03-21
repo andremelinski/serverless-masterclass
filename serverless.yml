@@ -48,32 +48,19 @@ functions:
         Action:
           - "s3:Get*"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  # s3FileGetByKey:
-  #   handler: src/endpoints/getImagesByKey.handler
-  #   name: s3-file-get
-  #   description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
-  #   events:
-  #     - http:
-  #         path: file/{fileKey}
-  #         method: GET
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - "s3:Get*"
-  #       Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  # s3FileDelete:
-  #   handler: src/endpoints/deleteImage.handler
-  #   name: s3-file-delete
-  #   description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
-  #   events:
-  #     - http:
-  #         path: file/{fileKey}
-  #         method: DELETE
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - "s3:DeleteObject"
-  #       Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+  s3FileDelete:
+    handler: src/endpoints/deleteImage.handler
+    name: s3-file-delete
+    description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
+    events:
+      - http:
+          path: file/{fileKey}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "s3:DeleteObject"
+        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
 
 
   
