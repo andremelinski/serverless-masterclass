@@ -10,10 +10,11 @@ const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
 const contentTypeRegex = /data:\s*(\w+\/\w+)/
 
-module.exports.handler = async (event) => {
+exports.handler = async (event) => {
 
     try {
-        const parsedBody = JSON.parse(event.body);
+        const {body = ''} = event.body
+        const parsedBody = JSON.parse(body);
 
         if (!body || !parsedBody.file) {
             return Responses._400({ message: 'incorrect body on request' });
