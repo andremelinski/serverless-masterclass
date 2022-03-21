@@ -14,8 +14,8 @@ module.exports.handler = async (event) => {
     };
 
     try {
-        const parsedBody = JSON.parse(event.body);
-        const base64File = parsedBody.file;
+        const bla = JSON.parse(event.body);
+        const base64File = bla.file;
         console.log(base64File)
         const parsedBody = Buffer.from(event.body, 'base64');
         let [contentType] =  contentTypeRegex.exec(event.body)
