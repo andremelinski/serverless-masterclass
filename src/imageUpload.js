@@ -12,7 +12,7 @@ const contentTypeRegex = /data:\s*(\w+\/\w+)/
 exports.handler = async (event) => {
 
     try {
-        const {body = ''} = event.body
+        const {body = ''} = event
         const parsedBody = JSON.parse(body);
 
         if (!body || !parsedBody.file) {
