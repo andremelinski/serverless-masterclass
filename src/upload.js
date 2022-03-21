@@ -14,11 +14,11 @@ module.exports.handler = async (event) => {
     };
 
     try {
-        console.log(typeof event.body)
+        console.log(event.body)
         const parsedBody = Buffer.from(event.body, 'base64');
-        let [contentType] =  contentTypeRegex.exec(event.body)
-        contentType = contentType.split(':')[1].trim()
-        const filePath = `images/${uuid()}.${contentType.split('/')[1]}`
+        // let [contentType] =  contentTypeRegex.exec(event.body)
+        // contentType = contentType.split(':')[1].trim()
+        const filePath = `images/${uuid()}`
 
         const params = {
             Bucket: BUCKET_NAME,
@@ -32,7 +32,7 @@ module.exports.handler = async (event) => {
             Bucket: BUCKET_NAME,
             Key: `images/${uuid()}-aqui`,
             Body: parsedBody,
-            ContentType: contentType,
+            ContentType: 'image/png',
             ACL: 'public-read'
         };
 
