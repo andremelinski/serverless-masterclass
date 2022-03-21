@@ -5,6 +5,9 @@ provider:
   runtime: nodejs14.x
   stage: dev
   region: us-east-1
+  environment:
+    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+    REGION: ${self:custom.region}
 
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
@@ -72,9 +75,7 @@ functions:
           - "s3:DeleteObject"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
 
-  environment:
-    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
-    REGION: ${self:custom.region}
+
   
 
 resources:
