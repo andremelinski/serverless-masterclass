@@ -4,7 +4,7 @@ const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 const REGION = process.env.REGION
-const contentTypeRegex = /(Content-Type:\s*\w+\/\w+)/
+const contentTypeRegex = /data:\s*(\w+\/\w+)/
 
 module.exports.handler = async (event) => {
 
@@ -14,25 +14,17 @@ module.exports.handler = async (event) => {
     };
 
     try {
-        console.log(event.body)
-        const parsedBody = Buffer.from(event.body, 'base64');
-        // let [contentType] =  contentTypeRegex.exec(event.body)
-        // contentType = contentType.split(':')[1].trim()
+        const parsedBody = JSON.parse(event.body);
+        let base64File = parsedBody.file;
+        const [contentType] =  contentTypeRegex.exec(base64File)
+        base64File = Buffer.from(base64File.replace(/^data:image\/\w+;base64,/, ""), "base64");
         const filePath = `images/${uuid()}`
-
-        // const params = {
-        //     Bucket: BUCKET_NAME,
-        //     Key: filePath,
-        //     Body: parsedBody,
-        //     ContentType: contentType,
-        //     ACL: 'public-read'
-        // };
 
         const params = {
             Bucket: BUCKET_NAME,
-            Key: `images/${uuid()}-aqui`,
-            Body: parsedBody,
-            ContentType: 'image/png',
+            Key: filePath,
+            Body: base64File,
+            ContentType: contentType,
             ACL: 'public-read'
         };
 
