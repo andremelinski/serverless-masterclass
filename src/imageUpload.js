@@ -1,4 +1,4 @@
-const Responses = require('./common/API_Responses')
+const Responses = require('./common/API_Responses.js')
 require("dotenv").config()
 const {v4 : uuid} = require("uuid");
 const AWS = require("aws-sdk");
