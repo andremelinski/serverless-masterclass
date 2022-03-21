@@ -4,7 +4,6 @@ const {v4 : uuid} = require("uuid");
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 
-const REGION = process.env.REGION || "us-east-1";
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 
 const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
@@ -44,7 +43,7 @@ exports.handler = async (event) => {
         };
 
         const uploadResult = await s3.upload(params).promise();
-        const url = `https://${BUCKET_NAME}.s3-${REGION}.amazonaws.com/${filePath}`;
+        const url = `https://${BUCKET_NAME}.s3.amazonaws.com/${filePath}`;
         return Responses._200({ uploadResult, url });
     } catch (error) {
         console.log('error', error);
