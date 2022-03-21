@@ -8,3 +8,4 @@ If you found this code example or video tutorial helpful, feel free to give the 
 ### Full Video Tutorial
 * [Part 1](https://www.youtube.com/watch?v=mWtnd-0Sm18)
 * [Part 2](https://www.youtube.com/watch?v=K-c0AoMmaOU)
+- https://easy64.org/convert-file-to-base64/
