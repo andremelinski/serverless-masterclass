@@ -15,7 +15,7 @@ exports.handler = async (event) => {
 
         if(key){
             params.Key = `${prefix}/${key}`
-            const presignedUrl = await s3.getSignedUrl('getObject', params).promise();
+            const presignedUrl = await s3.getSignedUrl('getObject', params);
             const data = await s3.getObject(params).promise();
             return Responses._200({ presignedUrl, data });
         }
