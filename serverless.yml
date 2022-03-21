@@ -43,3 +43,5 @@ resources:
       Properties:
         BucketName: ${self:custom.fileUploadBucketName}
         AccessControl: PublicRead
+        VersioningConfiguration:
+          Status: Enabled
