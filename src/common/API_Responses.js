@@ -27,4 +27,4 @@ const Responses = {
     },
 };
 
-export default Responses;
+module.exports = Responses;
