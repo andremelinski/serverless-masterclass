@@ -8,7 +8,7 @@ const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 exports.handler = async (event) => {
 
     try{
-        return event
+        return Responses._200({ event });
         const params = {
             Bucket: BUCKET_NAME
         };
