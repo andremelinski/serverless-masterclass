@@ -8,7 +8,7 @@ const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 exports.handler = async () => {
 
     try{
-        const {files : {Contents = []}} = await s3.listObjectsV2({Bucket: BUCKET_NAME, Prefix: 'images'}).promise()
+        const {Contents = []} = await s3.listObjectsV2({Bucket: BUCKET_NAME, Prefix: 'images'}).promise()
         const urls = Contents.flatMap(el => `https://${BUCKET_NAME}.s3.amazonaws.com/${el.Key}`)
         return Responses._200({ urls });
     } catch (error) {
