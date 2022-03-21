@@ -1,11 +1,23 @@
 # Serverless File Upload API using Amazon S3, API Gateway & AWS Lambda
-![visitors](https://visitor-badge.glitch.me/badge?page_id=jacksonyuan-yt.s3-file-upload-api)
 
-This repo holds the code for setting up a serverless file upload API pipeline using Amazon S3, API Gateway, and AWS Lambda.
+## Problem 
+Build a serverless architeture to upload media files from different users into your application
 
-If you found this code example or video tutorial helpful, feel free to give the repo a **star** or **like/subscribe** on my YouTube channel!
+## Services
+- [API Gateway](https://docs.aws.amazon.com/api-gateway/): APIs act as the "front door" for front-end applications, and secure APIs at any scale. 
+- [Lambda function](https://aws.amazon.com/lambda/): Serverless function that can run code without provisioning or managing infrastructure. 
+- [S3](https://aws.amazon.com/s3/): Object storage built to retrieve any amount of data from anywhere.
 
-### Full Video Tutorial
-* [Part 1](https://www.youtube.com/watch?v=mWtnd-0Sm18)
-* [Part 2](https://www.youtube.com/watch?v=K-c0AoMmaOU)
-- https://easy64.org/convert-file-to-base64/
+## Project
+
+- Receives a base64 encoded string file from API Gateway and send to s3 through the lambda.
+- To make a base64 file [click here](https://easy64.org/convert-file-to-base64/) to use easy64 website
+- Because it's only allowed media files, mime type is verified and if is not found or it's not a media file an exception is thrown.
+- Once file is successfully verified, it will be uploaded to the s3
+<br>
+Body example  
+![example](./screenshots/jsonbase64.png)
+<br>
+The response should be this:  
+<br>
+![example](./screenshots/responseS3.png)
