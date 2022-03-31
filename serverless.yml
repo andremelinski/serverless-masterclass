@@ -1,80 +1,20 @@
-service: s3-node-fileupload-serverless
+service: basic
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
   region: us-east-1
-  timeout: 10 # seconds
-  memorySize: 128 # mb
-  environment:
-    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
-    REGION: ${self:custom.region}
-
-custom:
-  fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
-  region: ${self:provider.region}
-
-plugins:
-  - serverless-iam-roles-per-function
-  - serverless-webpack
-
-package:
-  individually: true
 
 functions:
-  s3FileUploader:
-    handler: src/endpoints/imageUpload.handler
-    name: s3-file-uploader
-    description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
-    # API GATEWAY
-    events:
-      - http:
-          path: images
-          method: POST
-          cors: true
-    # this lambda will only add file into S3 
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - "s3:Put*"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  s3FileGetAll:
-    handler: src/endpoints/getAllImages.handler
-    name: s3-file-get
-    description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
-    events:
-      - http:
-          path: images
-          method: GET
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - "s3:Get*"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  s3FileDelete:
-    handler: src/endpoints/deleteImage.handler
-    name: s3-file-delete
-    description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
-    events:
-      - http:
-          path: file/{fileKey}
-          method: DELETE
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - "s3:DeleteObject"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-
-
-  
-
-resources:
-  Resources:
-    FileBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.fileUploadBucketName}
-        AccessControl: PublicRead
-        VersioningConfiguration:
-          Status: Enabled
+  hello:
+    handler: src/handler.randomNumber
+    timeout: 60 #seconds
+    memorySize: 128 #mb
