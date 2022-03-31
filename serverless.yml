@@ -17,10 +17,10 @@ custom:
 
 plugins:
   - serverless-iam-roles-per-function
-  - serverless-webpack
+  # - serverless-webpack
 
-package:
-  individually: true
+# package:
+#   individually: true
 
 functions:
   s3FileUploader:
