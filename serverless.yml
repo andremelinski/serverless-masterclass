@@ -11,11 +11,11 @@ provider:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
     REGION: ${self:custom.region}
     USER_TABLE_NAME: ${self:custom.userTableName}
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:*
-      Resource: '*'
+  # iamRoleStatements:
+  #   - Effect: Allow
+  #     Action:
+  #       - dynamodb:*
+  #     Resource: '*'
 
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
@@ -79,30 +79,38 @@ functions:
     name: getUser-DynamoDB
     description: get using from DynamoDB using ID as query string and API Gateway trigger.
     events: 
-      - https:
+      - http:
           path: get-user/{ID}
           method: GET
           cors: true
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #     - dynamodb:DescribeTable
-    #     - dynamodb:Query
-    #     - dynamodb:Scan
-    #     - dynamodb:GetItem
-    #     Resource: 
-    #       - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
-          # - { "Fn::GetAtt": ["DynamoDbBudgets", "Arn"] }
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        Resource: 
+          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
   getPlayerScore:
     handler: src/endpoints/user/getPlayerScore.handler
     name: getPlayerScore-DynamoDB
     description: get score from DynamoDB using user ID as query string and API Gateway trigger.
     events: 
-      - https:
+      - http:
           path: get-user/{ID}
           method: GET
           cors: true
-
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        Resource: 
+          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
+          
 resources:
   Resources:
     FileBucket:
