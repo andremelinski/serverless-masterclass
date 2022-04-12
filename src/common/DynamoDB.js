@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-
+const {dynamoError} = require('../common/helper/errorHandling')
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 const Dynamo = {
@@ -13,30 +13,24 @@ const Dynamo = {
 
         const data = await documentClient.get(params).promise();
 
-        if (!data || !data.Item) {
-            throw Error(`There was an error fetching the data for ID of ${ID} from ${TableName}`);
-        }
-        console.log(data);
-
+        if (!data || !data.Item) dynamoError('fetching', TableName, ID);
+        console.log(data)
         return data.Item;
     },
 
     async write(data, TableName) {
         if (!data.ID) {
-            throw Error('no ID on the data');
+            dynamoError('noId', ID, TableName);
         }
 
         const params = {
             TableName,
             Item: data,
         };
-
         const res = await documentClient.put(params).promise();
 
-        if (!res) {
-            throw Error(`There was an error inserting ID of ${data.ID} in table ${TableName}`);
-        }
-
+        if (!res) dynamoError('inserting', TableName, ID);
+        console.log(res)
         return data;
     },
 };

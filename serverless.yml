@@ -10,10 +10,12 @@ provider:
   environment:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
     REGION: ${self:custom.region}
+    USER_TABLE_NAME: ${self:custom.userTableName}
 
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
   region: ${self:provider.region}
+  userTableName: player-${self:provider.stage}
 
 plugins:
   - serverless-iam-roles-per-function
@@ -23,8 +25,9 @@ package:
   individually: true
 
 functions:
+  # File Upload Project 
   s3FileUploader:
-    handler: src/endpoints/imageUpload.handler
+    handler: src/endpoints/images/imageUpload.handler
     name: s3-file-uploader
     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
     # API GATEWAY
@@ -33,14 +36,14 @@ functions:
           path: images
           method: POST
           cors: true
-    # this lambda will only add file into S3 
+    # this lambda will only add file into S3
     iamRoleStatements:
       - Effect: Allow
         Action:
           - "s3:Put*"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
   s3FileGetAll:
-    handler: src/endpoints/getAllImages.handler
+    handler: src/endpoints/images/getImages.handler
     name: s3-file-get
     description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
     events:
@@ -53,7 +56,7 @@ functions:
           - "s3:Get*"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
   s3FileDelete:
-    handler: src/endpoints/deleteImage.handler
+    handler: src/endpoints/images/deleteImage.handler
     name: s3-file-delete
     description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
     events:
@@ -65,9 +68,35 @@ functions:
         Action:
           - "s3:DeleteObject"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-
-
-  
+  # DynamoDB Project
+  getUser:
+    handler: src/endpoints/user/getUser.handler
+    name: getUser-DynamoDB
+    description: get using from DynamoDB using ID as query string and API Gateway trigger.
+    events: 
+      - https:
+          path: get-user/{ID}
+          method: GET
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        Resource: 
+          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
+          # - { "Fn::GetAtt": ["DynamoDbBudgets", "Arn"] }
+  getPlayerScore:
+    handler: src/endpoints/user/getPlayerScore.handler
+    name: getPlayerScore-DynamoDB
+    description: get score from DynamoDB using user ID as query string and API Gateway trigger.
+    events: 
+      - https:
+          path: get-user/{ID}
+          method: GET
+          cors: true
 
 resources:
   Resources:
@@ -78,3 +107,17 @@ resources:
         AccessControl: PublicRead
         VersioningConfiguration:
           Status: Enabled
+    # Dynamo
+    MyDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.userTableName}
+        AttributeDefinitions:
+          - AttributeName: ID # ID is the unique identifier
+            AttributeType: S # unique
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        # How we allow AWS to write, get from this table
+        # consistent amount = scale up and down automatically
+        BillingMode: PAY_PER_REQUEST

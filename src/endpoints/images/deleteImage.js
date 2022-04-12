@@ -1,5 +1,5 @@
-const Responses = require('../common/API_Responses')
 require("dotenv").config()
+const Responses = require('../../common/API_Responses')
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 
