@@ -55,6 +55,7 @@ functions:
       - http:
           path: images
           method: GET
+          cors: true
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -68,6 +69,7 @@ functions:
       - http:
           path: file/{fileKey}
           method: DELETE
+          cors: true
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -110,7 +112,7 @@ functions:
         - dynamodb:GetItem
         Resource: 
           - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
-          
+
 resources:
   Resources:
     FileBucket:
