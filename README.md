@@ -6,7 +6,7 @@ Build a serverless architeture to upload media files from different users into y
 ## Services
 - [API Gateway](https://docs.aws.amazon.com/api-gateway/): APIs act as the "front door" for front-end applications, and secure APIs at any scale. 
 - [Lambda function](https://aws.amazon.com/lambda/): Serverless function that can run code without provisioning or managing infrastructure. 
-- [S3](https://aws.amazon.com/s3/): Object storage built to retrieve any amount of data from anywhere.
+- [DynamoDB](https://aws.amazon.com/s3/): Serverless NoSQL Database to save information from the user and their scores
 
 ## Project
 
