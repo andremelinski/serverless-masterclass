@@ -13,7 +13,8 @@ const Dynamo = {
 
         const data = await documentClient.get(params).promise();
 
-        if (!data || !data.Item)  throw Error(await dynamoError('fetching', TableName, ID));
+        if (!data || !data.Item) return
+        
         return data.Item;
     },
 

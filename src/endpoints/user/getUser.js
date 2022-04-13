@@ -16,7 +16,7 @@ exports.handler = async (event) => {
 
     const user = await Dynamo.get(ID, USER_TABLE_NAME).catch((err) => {
       console.log("error in Dynamo Get", err);
-      return null;
+      return 
     });
 
     if (!user) {
