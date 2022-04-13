@@ -11,11 +11,11 @@ provider:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
     REGION: ${self:custom.region}
     USER_TABLE_NAME: ${self:custom.userTableName}
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:*
-      Resource: '*'
+  # iamRoleStatements:
+  #   - Effect: Allow
+  #     Action:
+  #       - dynamodb:*
+  #     Resource: '*'
 
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
@@ -85,15 +85,15 @@ functions:
           path: get-user/{ID}
           method: GET
           cors: true
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #     - dynamodb:DescribeTable
-    #     - dynamodb:Query
-    #     - dynamodb:Scan
-    #     - dynamodb:GetItem
-    #     Resource: 
-    #       - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        Resource: 
+          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
   getPlayerScore:
     handler: src/endpoints/user/getPlayerScore.handler
     name: getPlayerScore-DynamoDB
@@ -103,15 +103,15 @@ functions:
           path: get-player-score/{ID}
           method: GET
           cors: true
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #     - dynamodb:DescribeTable
-    #     - dynamodb:Query
-    #     - dynamodb:Scan
-    #     - dynamodb:GetItem
-    #     Resource: 
-    #       - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        Resource: 
+          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
 
 resources:
   Resources:

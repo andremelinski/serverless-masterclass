@@ -6,7 +6,7 @@ const USER_TABLE_NAME = process.env.USER_TABLE_NAME
 exports.handler = async (event) => {
     
     let {ID = ''} = event.pathParameters;
-    if(!event.pathParameters || !ID) return Responses._400({message: event.pathParameters, "aqui": 1, table: USER_TABLE_NAME})
+    if(!event.pathParameters || !ID) return Responses._400({message: `${await dynamoError('noId', TableName)}`})
 
 
     const user = await Dynamo.get(ID, USER_TABLE_NAME).catch(err => {
@@ -14,7 +14,7 @@ exports.handler = async (event) => {
         return null
     });
 
-    if(!user) return Responses._400({message: {ID, table: USER_TABLE_NAME}})
+    if(!user) return Responses._400({message: `${await dynamoError('fetching', TableName, ID)}`})
 
     return Responses._200({user})
 }
