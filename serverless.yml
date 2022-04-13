@@ -97,8 +97,12 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb:*
-        Resource: '*'
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        Resource: 
+          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] }
 
 resources:
   Resources:
