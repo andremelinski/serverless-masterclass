@@ -27,7 +27,7 @@ const Dynamo = {
         };
         const res = await documentClient.put(params).promise();
 
-        if (!res) throw new Error(await dynamoError('inserting', TableName, ID));
+        if (!res) throw new Error(await dynamoError('inserting', TableName, data));
         
         return data;
     },
