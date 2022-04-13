@@ -1,7 +1,7 @@
 require("dotenv").config()
 const Responses = require('../../common/API_Responses')
 const Dynamo = require('../../common/DynamoDB')
-const {dynamoError} = require('../common/helper/errorHandling')
+const {dynamoError} = require('../../common/helper/errorHandling')
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME
 exports.handler = async (event) => {
