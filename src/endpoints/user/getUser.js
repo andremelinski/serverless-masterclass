@@ -5,7 +5,6 @@ const { dynamoError } = require("../../common/helper/errorHandling");
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME;
 exports.handler = async (event) => {
-  try {
     let message = "";
     let { ID = "" } = event.pathParameters;
 
@@ -25,8 +24,4 @@ exports.handler = async (event) => {
     }
 
     return Responses._200({ user });
-  } catch (err) {
-      console.log(err)
-    return Responses._400({ err: err.message || err.stack });
-  }
 };
