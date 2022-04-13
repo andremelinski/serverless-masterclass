@@ -100,7 +100,7 @@ functions:
     description: get score from DynamoDB using user ID as query string and API Gateway trigger.
     events: 
       - http:
-          path: get-user/{ID}
+          path: get-player-score/{ID}
           method: GET
           cors: true
     iamRoleStatements:
