@@ -5,11 +5,12 @@ const { dynamoError } = require("../../common/helper/errorHandling");
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME;
 exports.handler = async (event) => {
+  try {
     let message = "";
     let { ID = "" } = event.pathParameters;
 
     if (!event.pathParameters || !ID) {
-      message = await dynamoError("noId", TableName);
+      message = await dynamoError("noId", USER_TABLE_NAME);
       return Responses._400({ message });
     }
 
@@ -19,9 +20,12 @@ exports.handler = async (event) => {
     });
 
     if (!user) {
-      message = await dynamoError("fetching", TableName, ID);
+      message = await dynamoError("fetching", USER_TABLE_NAME, ID);
       return Responses._400({ message });
     }
 
     return Responses._200({ user });
+  } catch (err) {
+    return Responses._400({ err: err.message || err.stack });
+  }
 };
