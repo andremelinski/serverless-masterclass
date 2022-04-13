@@ -14,12 +14,12 @@ exports.handler = async (event) => {
       return;
     });
 
-    if (!user) {
+    if (!newUser) {
       const message = await dynamoError("fetching", USER_TABLE_NAME, userInfo.ID);
       return Responses._400({ message });
     }
 
-    return Responses._200({ user });
+    return Responses._200({ newUser });
   } catch (err) {
     return Responses._400({ err: err.message || err.stack });
   }
