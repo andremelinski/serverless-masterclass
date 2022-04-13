@@ -11,11 +11,6 @@ provider:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
     REGION: ${self:custom.region}
     USER_TABLE_NAME: ${self:custom.userTableName}
-  # iamRoleStatements:
-  #   - Effect: Allow
-  #     Action:
-  #       - dynamodb:*
-  #     Resource: '*'
 
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
@@ -88,12 +83,8 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        Resource: 
-          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
+          - dynamodb:*
+        Resource: '*'
   getPlayerScore:
     handler: src/endpoints/user/getPlayerScore.handler
     name: getPlayerScore-DynamoDB
@@ -106,12 +97,8 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        Resource: 
-          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] } #you will also see the logical IDs below where they are provisioned
+          - dynamodb:*
+        Resource: '*'
 
 resources:
   Resources:
