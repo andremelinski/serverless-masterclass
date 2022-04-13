@@ -4,23 +4,18 @@ const documentClient = new AWS.DynamoDB.DocumentClient();
 
 const Dynamo = {
     async get(ID, TableName) {
-        try{
         const params = {
             TableName,
             Key: {
                 ID,
             },
         };
-        console.log(params);
+
         const data = await documentClient.get(params).promise();
 
-        if (!data || !data.Item) dynamoError('fetching', TableName, ID);
+        if (!data || !data.Item)  throw Error(`There was an error fetching the data for ID of ${ID} from ${TableName}`);
         console.log(data)
         return data.Item;
-    }catch(e){
-        console.log(e)
-        return 
-    }
     },
 
     async write(data, TableName) {
