@@ -13,13 +13,13 @@ const Dynamo = {
 
         const data = await documentClient.get(params).promise();
 
-        if (!data || !data.Item)  throw new Error(await dynamoError('fetching', TableName, ID));
+        if (!data || !data.Item)  throw Error(await dynamoError('fetching', TableName, ID));
         return data.Item;
     },
 
     async write(data, TableName) {
         
-        if (!data.ID) throw new Error(await dynamoError('noId', TableName));
+        if (!data.ID) throw Error(await dynamoError('noId', TableName));
 
         const params = {
             TableName,
@@ -27,7 +27,7 @@ const Dynamo = {
         };
         const res = await documentClient.put(params).promise();
 
-        if (!res) throw new Error(await dynamoError('inserting', TableName, ID));
+        if (!res) throw Error(await dynamoError('inserting', TableName, ID));
         
         return data;
     },
