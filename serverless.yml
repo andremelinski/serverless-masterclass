@@ -8,10 +8,11 @@ provider:
   timeout: 10 # seconds
   memorySize: 128 # mb
   apiGateway:
+    # shouldStartNameWithService: true
     apiKeys: 
       - ${self.provider.stage}-api-key
-    resourcePolicy: ...
-    usagePlan: ...
+    # resourcePolicy: ...
+    # usagePlan: ...
   environment:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
     REGION: ${self:custom.region}
