@@ -21,6 +21,7 @@ exports.handler = async (event) => {
         }
 
         const {Contents = []} = await s3.listObjectsV2(params).promise()
+        console.log(Contents)
         const urls = Contents.flatMap(el => `https://${BUCKET_NAME}.s3.amazonaws.com/${el.Key}`)
         return Responses._200({ urls });
     } catch (error) {
