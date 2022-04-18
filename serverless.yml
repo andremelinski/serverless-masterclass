@@ -7,6 +7,12 @@ provider:
   region: us-east-1
   timeout: 10 # seconds
   memorySize: 128 # mb
+  apiGateway:
+    shouldStartWithService: true
+    apiKeys: 
+      - ${self.provider.stage}-api-key
+    resourcePolicy: ...
+    usagePlan: ...
   environment:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
     REGION: ${self:custom.region}
@@ -36,7 +42,6 @@ functions:
           path: images
           method: POST
           cors: true
-    # this lambda will only add file into S3
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -51,6 +56,7 @@ functions:
           path: images
           method: GET
           cors: true
+          private: true
     iamRoleStatements:
       - Effect: Allow
         Action:
