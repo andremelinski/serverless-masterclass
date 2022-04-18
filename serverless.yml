@@ -10,7 +10,7 @@ provider:
   apiGateway:
     # shouldStartNameWithService: true
     apiKeys: 
-      - ${self.provider.stage}-api-key
+      - ${self:provider.stage}-api-key
     # resourcePolicy: ...
     # usagePlan: ...
   environment:
