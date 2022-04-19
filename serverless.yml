@@ -11,8 +11,32 @@ provider:
     # shouldStartNameWithService: true
     apiKeys: 
       - ${self:provider.stage}-api-key
-    # resourcePolicy: ...
-    # usagePlan: ...
+    usagePlan:
+      quota: 
+        limit: 1000
+        period: MONTH
+      throttle:
+        rateLimit: 5 #avr of 5 times/second
+        burstLimit: 20 #max of 20 times/second
+    # apiKeys: 
+    #   - free: 
+    #     - ${self:provider.stage}-free-api-key
+    #   - paid: 
+    #     - ${self:provider.stage}-paid-api-key
+    # usagePlan:
+    #   quota: 
+    #     - free:
+    #       limit: 1000
+    #       period: MONTH
+    #       throttle:
+    #         rateLimit: 5 #avr of 5 times/second
+    #         burstLimit: 20 #max of 20 times/second
+    #     - paid:
+    #       limit: 10000
+    #       period: MONTH
+    #       throttle:
+    #         rateLimit: 5 #avr of 5 times/second
+    #         burstLimit: 20 #max of 20 times/second
   environment:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
     REGION: ${self:custom.region}
@@ -135,6 +159,20 @@ functions:
         Resource: '*' 
 # PutItem: Creates a new item, or replaces an old item with a new item. 
 # UpdateItem: Edits an existing item's attributes, or adds a new item to the table if it does not already exist. You can put, delete, or add attribute values.
+  sendEmail:
+    handler: src/common/sendEmailTemplate.handler
+    name: SendEmail
+    description: general template to send email
+    events: 
+      - http:
+          path: new-user
+          method: POST
+          cors: true
+    iamRoleStatements: 
+      - Effect: Allow
+        Action:
+          - ses:*
+        Resource: '*' 
 
 resources:
   Resources:
