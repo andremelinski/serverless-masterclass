@@ -9,22 +9,22 @@ provider:
   memorySize: 128 # mb
   apiGateway:
     # shouldStartNameWithService: true
-    apiKeys: 
+    apiKeys:
       - ${self:provider.stage}-api-key
     usagePlan:
-      quota: 
+      quota:
         limit: 1000
         period: MONTH
       throttle:
         rateLimit: 5 #avr of 5 times/second
         burstLimit: 20 #max of 20 times/second
-    # apiKeys: 
-    #   - free: 
+    # apiKeys:
+    #   - free:
     #     - ${self:provider.stage}-free-api-key
-    #   - paid: 
+    #   - paid:
     #     - ${self:provider.stage}-paid-api-key
     # usagePlan:
-    #   quota: 
+    #   quota:
     #     - free:
     #       limit: 1000
     #       period: MONTH
@@ -55,12 +55,11 @@ package:
   individually: true
 
 functions:
-  # File Upload Project 
+  # File Upload Project
   s3FileUploader:
     handler: src/endpoints/images/imageUpload.handler
     name: s3-file-uploader
     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
-    # API GATEWAY
     events:
       - http:
           path: images
@@ -105,7 +104,7 @@ functions:
     handler: src/endpoints/user/getUser.handler
     name: getUser-DynamoDB
     description: get using from DynamoDB using ID as query string and API Gateway trigger.
-    events: 
+    events:
       - http:
           path: get-user/{ID}
           method: GET
@@ -113,17 +112,17 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        Resource: 
+          - dynamodb:DescribeTable
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+        Resource:
           - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] }
   getPlayerScore:
     handler: src/endpoints/user/getPlayerScore.handler
     name: getPlayerScore-DynamoDB
     description: get score from DynamoDB using user ID as query string and API Gateway trigger.
-    events: 
+    events:
       - http:
           path: get-player-score/{ID}
           method: GET
@@ -131,17 +130,17 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        Resource: 
+          - dynamodb:DescribeTable
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+        Resource:
           - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] }
   addUser:
     handler: src/endpoints/user/createUser.handler
     name: newUser-DynamoDB
     description: creating using in DynamoDB and API Gateway as trigger and with validation.
-    events: 
+    events:
       - http:
           path: new-user
           method: POST
@@ -151,28 +150,28 @@ functions:
               application/json:
                 schema: ${file(./validator/newUser.validator.json)}
                 name: PostCreateUser
-                description: 'Validation model for new Users'
-    iamRoleStatements: 
+                description: "Validation model for new Users"
+    iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:*
-        Resource: '*' 
-# PutItem: Creates a new item, or replaces an old item with a new item. 
-# UpdateItem: Edits an existing item's attributes, or adds a new item to the table if it does not already exist. You can put, delete, or add attribute values.
+        Resource: "*"
+  # PutItem: Creates a new item, or replaces an old item with a new item.
+  # UpdateItem: Edits an existing item's attributes, or adds a new item to the table if it does not already exist. You can put, delete, or add attribute values.
   sendEmail:
     handler: src/common/sendEmailTemplate.handler
     name: SendEmail
     description: general template to send email
-    events: 
+    events:
       - http:
           path: new-user
           method: POST
           cors: true
-    iamRoleStatements: 
+    iamRoleStatements:
       - Effect: Allow
         Action:
           - ses:*
-        Resource: '*' 
+        Resource: "*"
 
 resources:
   Resources:
