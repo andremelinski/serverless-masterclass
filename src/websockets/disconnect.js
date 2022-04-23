@@ -9,6 +9,7 @@ exports.handler = async (event) => {
 		await Dynamo.delete(connectionId, tableName);
 		return Response._200({ message: 'disconnected' });
 	} catch (err) {
+		console.log(err);
 		return Response._400({ message: err });
 	}
 };

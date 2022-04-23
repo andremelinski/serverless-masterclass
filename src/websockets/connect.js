@@ -4,6 +4,7 @@ const Dynamo = require('../common/DynamoDB');
 
 const tableName = process.env.TABLE_NAME;
 exports.handler = async (event) => {
+	console.log(event);
 	try {
 		const { connectionId: ID } = event.requestContext;
 		const data = {
@@ -15,6 +16,7 @@ exports.handler = async (event) => {
 		await Dynamo.write(data, tableName);
 		return Response._200({ message: 'connected' });
 	} catch (err) {
+		console.log(err);
 		return Response._400({ message: err });
 	}
 };
