@@ -25,7 +25,7 @@ plugins:
 package:
     individually: true
 
-fucntions:
+functions:
     websocker-connect:
         handler: src/websockets/connect.handler
         events:
