@@ -4,7 +4,6 @@ const Dynamo = require('../common/DynamoDB');
 
 const tableName = process.env.TABLE_NAME;
 exports.handler = async (event) => {
-	console.log(event);
 	try {
 		const { connectionId: ID } = event.requestContext;
 		const data = {

@@ -1,3 +1,4 @@
+const AWS = require('aws-sdk');
 const { dynamoError } = require('../common/helper/errorHandling');
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
