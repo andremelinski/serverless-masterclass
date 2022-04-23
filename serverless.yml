@@ -26,22 +26,22 @@ package:
     individually: true
 
 functions:
-    websocker-connect:
+    websocket-connect:
         handler: src/websockets/connect.handler
         events:
             - websocket:
                   route: $connect
-    websocker-disconnect:
+    websocket-disconnect:
         handler: src/websockets/disconnect.handler
         events:
             - websocket:
                   route: $disconnect
-    websocker-default:
+    websocket-default:
         handler: src/websockets/default.handler
         events:
             - websocket:
                   route: $default
-    websocker-message:
+    websocket-message:
         handler: src/websockets/message.handler
         events:
             - websocket:

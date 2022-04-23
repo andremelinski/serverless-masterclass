@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 const { dynamoError } = require('../common/helper/errorHandling');
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
@@ -39,7 +38,7 @@ const Dynamo = {
 			},
 		};
 		const deleteData = await documentClient.delete(params).promise();
-		if (!deleteData) throw new Error(await dynamoError('deleting', TableName, data));
+		if (!deleteData) throw new Error(await dynamoError('deleting', TableName, deleteData));
 		return deleteData;
 	},
 };
