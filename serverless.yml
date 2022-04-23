@@ -8,7 +8,7 @@ provider:
     timeout: 10 # seconds
     memorySize: 128 # mb
     environment:
-        TABLE_NAME: ${self.custom.tableName}
+        TABLE_NAME: ${self:custom.tableName}
     iamRoleStatements:
         - Effect: Allow
           Action:
