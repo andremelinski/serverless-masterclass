@@ -163,8 +163,17 @@ functions:
         events:
             - http:
                   path: update-user-score/{id}
+                  reqValidatorName: QueryValidator
                   method: PUT
                   cors: true
+                  request:
+                      parameters:
+                          querystrings:
+                              id: true
+                          application/json:
+                              schema: ${file(./validator/updateUser.validator.json)}
+                              name: UpdateUserScore
+                              description: 'Validation model for score update'
         iamRoleStatements:
             - Effect: Allow
               Action:
@@ -221,3 +230,12 @@ resources:
                 # How we allow AWS to write, get from this table
                 # consistent amount = scale up and down automatically
                 BillingMode: PAY_PER_REQUEST
+        # query validator
+        QueryValidator:
+            Type: 'AWS::ApiGateway::RequestValidator'
+            Properties:
+                Name: ParameterRequestValidator
+                RestApiId:
+                    Ref: ApiGatewayRestApi
+                ValidateRequestBody: false
+                ValidateRequestParameters: true
