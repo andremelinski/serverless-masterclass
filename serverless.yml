@@ -1,198 +1,209 @@
 service: s3-node-fileupload-serverless
 
 provider:
-  name: aws
-  runtime: nodejs14.x
-  stage: dev
-  region: us-east-1
-  timeout: 10 # seconds
-  memorySize: 128 # mb
-  apiGateway:
-    # shouldStartNameWithService: true
-    apiKeys:
-      - ${self:provider.stage}-api-key
-    usagePlan:
-      quota:
-        limit: 1000
-        period: MONTH
-      throttle:
-        rateLimit: 5 #avr of 5 times/second
-        burstLimit: 20 #max of 20 times/second
-    # apiKeys:
-    #   - free:
-    #     - ${self:provider.stage}-free-api-key
-    #   - paid:
-    #     - ${self:provider.stage}-paid-api-key
-    # usagePlan:
-    #   quota:
-    #     - free:
-    #       limit: 1000
-    #       period: MONTH
-    #       throttle:
-    #         rateLimit: 5 #avr of 5 times/second
-    #         burstLimit: 20 #max of 20 times/second
-    #     - paid:
-    #       limit: 10000
-    #       period: MONTH
-    #       throttle:
-    #         rateLimit: 5 #avr of 5 times/second
-    #         burstLimit: 20 #max of 20 times/second
-  environment:
-    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
-    REGION: ${self:custom.region}
-    USER_TABLE_NAME: ${self:custom.userTableName}
+    name: aws
+    runtime: nodejs14.x
+    stage: dev
+    region: us-east-1
+    timeout: 10 # seconds
+    memorySize: 128 # mb
+    apiGateway:
+        # shouldStartNameWithService: true
+        apiKeys:
+            - ${self:provider.stage}-api-key
+        usagePlan:
+            quota:
+                limit: 1000
+                period: MONTH
+            throttle:
+                rateLimit: 5 #avr of 5 times/second
+                burstLimit: 20 #max of 20 times/second
+        # apiKeys:
+        #   - free:
+        #     - ${self:provider.stage}-free-api-key
+        #   - paid:
+        #     - ${self:provider.stage}-paid-api-key
+        # usagePlan:
+        #   quota:
+        #     - free:
+        #       limit: 1000
+        #       period: MONTH
+        #       throttle:
+        #         rateLimit: 5 #avr of 5 times/second
+        #         burstLimit: 20 #max of 20 times/second
+        #     - paid:
+        #       limit: 10000
+        #       period: MONTH
+        #       throttle:
+        #         rateLimit: 5 #avr of 5 times/second
+        #         burstLimit: 20 #max of 20 times/second
+    environment:
+        FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+        REGION: ${self:custom.region}
+        USER_TABLE_NAME: ${self:custom.userTableName}
 
 custom:
-  fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
-  region: ${self:provider.region}
-  userTableName: player-${self:provider.stage}
+    fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
+    region: ${self:provider.region}
+    userTableName: player-${self:provider.stage}
 
 plugins:
-  - serverless-iam-roles-per-function
-  - serverless-webpack
+    - serverless-iam-roles-per-function
+    - serverless-webpack
 
 package:
-  individually: true
+    individually: true
 
 functions:
-  # File Upload Project
-  s3FileUploader:
-    handler: src/endpoints/images/imageUpload.handler
-    name: s3-file-uploader
-    description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
-    events:
-      - http:
-          path: images
-          method: POST
-          cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - "s3:Put*"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  s3FileGetAll:
-    handler: src/endpoints/images/getImages.handler
-    name: s3-file-get
-    description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
-    events:
-      - http:
-          path: images
-          method: GET
-          cors: true
-          private: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - "s3:Get*"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  s3FileDelete:
-    handler: src/endpoints/images/deleteImage.handler
-    name: s3-file-delete
-    description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
-    events:
-      - http:
-          path: file/{fileKey}
-          method: DELETE
-          cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - "s3:DeleteObject"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  # DynamoDB Project
-  getUser:
-    handler: src/endpoints/user/getUser.handler
-    name: getUser-DynamoDB
-    description: get using from DynamoDB using ID as query string and API Gateway trigger.
-    events:
-      - http:
-          path: get-user/{ID}
-          method: GET
-          cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:DescribeTable
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-        Resource:
-          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] }
-  getPlayerScore:
-    handler: src/endpoints/user/getPlayerScore.handler
-    name: getPlayerScore-DynamoDB
-    description: get score from DynamoDB using user ID as query string and API Gateway trigger.
-    events:
-      - http:
-          path: get-player-score/{ID}
-          method: GET
-          cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:DescribeTable
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-        Resource:
-          - { "Fn::GetAtt": ["MyDynamoDBTable", "Arn"] }
-  addUser:
-    handler: src/endpoints/user/createUser.handler
-    name: newUser-DynamoDB
-    description: creating using in DynamoDB and API Gateway as trigger and with validation.
-    events:
-      - http:
-          path: new-user
-          method: POST
-          cors: true
-          request:
-            schemas:
-              application/json:
-                schema: ${file(./validator/newUser.validator.json)}
-                name: PostCreateUser
-                description: "Validation model for new Users"
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:*
-        Resource: "*"
-  # PutItem: Creates a new item, or replaces an old item with a new item.
-  # UpdateItem: Edits an existing item's attributes, or adds a new item to the table if it does not already exist. You can put, delete, or add attribute values.
-  sendEmail:
-    handler: src/common/sendEmailTemplate.handler
-    name: SendEmail
-    description: general template to send email
-    events:
-      - http:
-          path: new-user
-          method: POST
-          cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - ses:*
-        Resource: "*"
+    # File Upload Project
+    s3FileUploader:
+        handler: src/endpoints/images/imageUpload.handler
+        name: s3-file-uploader
+        description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
+        events:
+            - http:
+                  path: images
+                  method: POST
+                  cors: true
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - 's3:Put*'
+              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    s3FileGetAll:
+        handler: src/endpoints/images/getImages.handler
+        name: s3-file-get
+        description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
+        events:
+            - http:
+                  path: images
+                  method: GET
+                  cors: true
+                  private: true
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - 's3:Get*'
+              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    s3FileDelete:
+        handler: src/endpoints/images/deleteImage.handler
+        name: s3-file-delete
+        description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
+        events:
+            - http:
+                  path: file/{fileKey}
+                  method: DELETE
+                  cors: true
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - 's3:DeleteObject'
+              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    # DynamoDB Project
+    getUser:
+        handler: src/endpoints/user/getUser.handler
+        name: getUser-DynamoDB
+        description: get using from DynamoDB using ID as query string and API Gateway trigger.
+        events:
+            - http:
+                  path: get-user/{ID}
+                  method: GET
+                  cors: true
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - dynamodb:DescribeTable
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:GetItem
+              Resource:
+                  - { 'Fn::GetAtt': ['MyDynamoDBTable', 'Arn'] }
+    getPlayerScore:
+        handler: src/endpoints/user/getPlayerScore.handler
+        name: getPlayerScore-DynamoDB
+        description: get score from DynamoDB using user ID as query string and API Gateway trigger.
+        events:
+            - http:
+                  path: get-player-score/{ID}
+                  method: GET
+                  cors: true
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - dynamodb:DescribeTable
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:GetItem
+              Resource:
+                  - { 'Fn::GetAtt': ['MyDynamoDBTable', 'Arn'] }
+    addUser:
+        handler: src/endpoints/user/createUser.handler
+        name: newUser-DynamoDB
+        description: creating using in DynamoDB and API Gateway as trigger and with validation.
+        events:
+            - http:
+                  path: new-user
+                  method: POST
+                  cors: true
+                  request:
+                      schemas:
+                          application/json:
+                              schema: ${file(./validator/newUser.validator.json)}
+                              name: PostCreateUser
+                              description: 'Validation model for new Users'
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - dynamodb:*
+              Resource: '*'
+    # PutItem: Creates a new item, or replaces an old item with a new item.
+    # UpdateItem: Edits an existing item's attributes, or adds a new item to the table if it does not already exist. You can put, delete, or add attribute values.
+    sendEmail:
+        handler: src/common/sendEmailTemplate.handler
+        name: SendEmail
+        description: general template to send email
+        events:
+            - http:
+                  path: new-user
+                  method: POST
+                  cors: true
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - ses:*
+              Resource: '*'
+    scheduleEmail:
+        handler: src/endpoints/scheduleTasks/reminderEmail.handler
+        name: ScheduleEmail
+        description: schedule email using cron job
+        events:
+            - schedule: cron(0 9 ? * 3 *)
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - ses:*
+              Resource: '*'
 
 resources:
-  Resources:
-    FileBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.fileUploadBucketName}
-        AccessControl: PublicRead
-        VersioningConfiguration:
-          Status: Enabled
-    # Dynamo
-    MyDynamoDBTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.userTableName}
-        AttributeDefinitions:
-          - AttributeName: ID # ID is the unique identifier
-            AttributeType: S # unique
-        KeySchema:
-          - AttributeName: ID
-            KeyType: HASH
-        # How we allow AWS to write, get from this table
-        # consistent amount = scale up and down automatically
-        BillingMode: PAY_PER_REQUEST
+    Resources:
+        FileBucket:
+            Type: AWS::S3::Bucket
+            Properties:
+                BucketName: ${self:custom.fileUploadBucketName}
+                AccessControl: PublicRead
+                VersioningConfiguration:
+                    Status: Enabled
+        # Dynamo
+        MyDynamoDBTable:
+            Type: AWS::DynamoDB::Table
+            Properties:
+                TableName: ${self:custom.userTableName}
+                AttributeDefinitions:
+                    - AttributeName: ID # ID is the unique identifier
+                      AttributeType: S # unique
+                KeySchema:
+                    - AttributeName: ID
+                      KeyType: HASH
+                # How we allow AWS to write, get from this table
+                # consistent amount = scale up and down automatically
+                BillingMode: PAY_PER_REQUEST
