@@ -156,6 +156,20 @@ functions:
               Action:
                   - dynamodb:*
               Resource: '*'
+    updateUser:
+        handler: src/endpoints/user/updateUser.handler
+        name: updateUser-DynamoDB
+        description: updating user score in DynamoDB
+        events:
+            - http:
+                  path: update-user-score/{id}
+                  method: PUT
+                  cors: true
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - dynamodb:*
+              Resource: '*'
     # PutItem: Creates a new item, or replaces an old item with a new item.
     # UpdateItem: Edits an existing item's attributes, or adds a new item to the table if it does not already exist. You can put, delete, or add attribute values.
     sendEmail:
