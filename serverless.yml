@@ -156,9 +156,9 @@ functions:
               Action:
                   - dynamodb:*
               Resource: '*'
-    updateUser:
-        handler: src/endpoints/user/updateUser.handler
-        name: updateUser-DynamoDB
+    updateScore:
+        handler: src/endpoints/user/updateScore.handler
+        name: updateScore-DynamoDB
         description: updating user score in DynamoDB
         events:
             - http:
