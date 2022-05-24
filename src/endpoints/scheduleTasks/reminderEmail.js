@@ -1,4 +1,4 @@
-const Responses = require('../common/API_Responses');
+const Responses = require('../../common/API_Responses');
 require('dotenv').config();
 const AWS = require('aws-sdk');
 
