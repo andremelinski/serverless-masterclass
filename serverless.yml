@@ -170,6 +170,7 @@ functions:
                       parameters:
                           querystrings:
                               ID: true
+                      schemas:
                           application/json:
                               schema: ${file(./validator/updateUser.validator.json)}
                               name: UpdateUserScore
