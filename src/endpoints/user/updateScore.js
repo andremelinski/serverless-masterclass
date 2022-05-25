@@ -14,7 +14,7 @@ exports.handler = async (event) => {
 		}
 
 		if (!score) {
-			const message = await dynamoError('fetching', USER_TABLE_NAME, userId);
+			const message = await dynamoError('fetching', USER_TABLE_NAME, ID);
 			return Responses._400({ message });
 		}
 		console.log({ score });
