@@ -20,7 +20,7 @@ exports.handler = async (event) => {
 		}
 
 		const message = await Dynamo.update({
-			tableName,
+			tableName: USER_TABLE_NAME,
 			primaryKey: 'ID',
 			primaryKeyValue: ID,
 			updateKey: 'Score',
