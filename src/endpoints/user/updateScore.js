@@ -7,7 +7,7 @@ const USER_TABLE_NAME = process.env.USER_TABLE_NAME;
 exports.handler = async (event) => {
 	try {
 		const { ID = '' } = event.pathParameters;
-		const { score } = event.body;
+		const { score } = JSON.parse(event.body);
 		if (!ID) {
 			const message = await dynamoError('noId', USER_TABLE_NAME);
 			return Responses._400({ message });
