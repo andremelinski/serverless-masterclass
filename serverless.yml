@@ -162,14 +162,11 @@ functions:
         description: updating user score in DynamoDB
         events:
             - http:
-                  path: update-user-score
+                  path: update-user-score/{ID}
                   #   reqValidatorName: QueryValidator
                   method: PUT
                   cors: true
                   request:
-                      parameters:
-                          querystrings:
-                              ID: true
                       schemas:
                           application/json:
                               schema: ${file(./validator/updateUser.validator.json)}
