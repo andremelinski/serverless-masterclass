@@ -5,26 +5,30 @@ const { dynamoError } = require('../../common/helper/errorHandling');
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME;
 exports.handler = async (event) => {
-	const { ID = '' } = event.pathParameters;
-	const { score } = event.body;
+	try {
+		const { ID = '' } = event.pathParameters;
+		const { score } = event.body;
+		if (!ID) {
+			const message = await dynamoError('noId', USER_TABLE_NAME);
+			return Responses._400({ message });
+		}
 
-	if (!ID) {
-		const message = await dynamoError('noId', USER_TABLE_NAME);
-		return Responses._400({ message });
+		if (!score) {
+			const message = await dynamoError('fetching', USER_TABLE_NAME, userId);
+			return Responses._400({ message });
+		}
+		console.log({ score });
+
+		const message = await Dynamo.update({
+			tableName,
+			primaryKey: 'ID',
+			primaryKeyValue: ID,
+			updateKey: 'Score',
+			updateValue: score,
+		});
+
+		return Responses._200({ message });
+	} catch (err) {
+		return Responses._400({ err });
 	}
-
-	if (!score) {
-		const message = await dynamoError('fetching', USER_TABLE_NAME, userId);
-		return Responses._400({ message });
-	}
-
-	const message = await Dynamo.update({
-		tableName,
-		primaryKey: 'ID',
-		primaryKeyValue: ID,
-		updateKey: 'Score',
-		updateValue: score,
-	});
-
-	return Responses._200({ message });
 };
