@@ -200,7 +200,7 @@ functions:
         name: ScheduleEmail
         description: schedule email using cron job
         events:
-            - schedule: cron(0 9 ? * 3 *)
+            - schedule: cron(0 10 ? * 4 *)
         iamRoleStatements:
             - Effect: Allow
               Action:

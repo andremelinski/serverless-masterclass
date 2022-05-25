@@ -22,7 +22,7 @@ exports.handler = async () => {
 
 		const emailSettings = {
 			Destination: {
-				ToAddress: [to],
+				ToAddresses: [to],
 			},
 			Message: {
 				Body: {
