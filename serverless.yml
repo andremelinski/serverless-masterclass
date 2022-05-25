@@ -163,7 +163,7 @@ functions:
         events:
             - http:
                   path: update-user-score/{ID}
-                  reqValidatorName: QueryValidator
+                  #   reqValidatorName: QueryValidator
                   method: PUT
                   cors: true
                   request:
@@ -231,11 +231,11 @@ resources:
                 # consistent amount = scale up and down automatically
                 BillingMode: PAY_PER_REQUEST
         # query validator
-        QueryValidator:
-            Type: 'AWS::ApiGateway::RequestValidator'
-            Properties:
-                Name: ParameterRequestValidator
-                RestApiId:
-                    Ref: ApiGatewayRestApi
-                ValidateRequestBody: false
-                ValidateRequestParameters: true
+        # QueryValidator:
+        #     Type: 'AWS::ApiGateway::RequestValidator'
+        #     Properties:
+        #         Name: ParameterRequestValidator
+        #         RestApiId:
+        #             Ref: ApiGatewayRestApi
+        #         ValidateRequestBody: false
+        #         ValidateRequestParameters: true

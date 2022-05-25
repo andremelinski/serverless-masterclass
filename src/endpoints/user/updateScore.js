@@ -22,7 +22,7 @@ exports.handler = async (event) => {
 		tableName,
 		primaryKey: 'ID',
 		primaryKeyValue: ID,
-		updateKey: 'score',
+		updateKey: 'Score',
 		updateValue: score,
 	});
 
