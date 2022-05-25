@@ -185,7 +185,7 @@ functions:
         description: general template to send email
         events:
             - http:
-                  path: new-user
+                  path: send-email
                   method: POST
                   cors: true
         iamRoleStatements:

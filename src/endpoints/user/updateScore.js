@@ -29,6 +29,7 @@ exports.handler = async (event) => {
 
 		return Responses._200({ message });
 	} catch (err) {
-		return Responses._400({ err });
+		console.log(err);
+		return Responses._400({ err: err.message || err.stack });
 	}
 };
