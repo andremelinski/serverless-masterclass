@@ -162,14 +162,14 @@ functions:
         description: updating user score in DynamoDB
         events:
             - http:
-                  path: update-user-score/{ID}
-                  #   reqValidatorName: QueryValidator
+                  path: update-user-score
+                  reqValidatorName: QueryValidator
                   method: PUT
                   cors: true
                   request:
                       parameters:
                           querystrings:
-                              id: true
+                              ID: true
                           application/json:
                               schema: ${file(./validator/updateUser.validator.json)}
                               name: UpdateUserScore
@@ -231,11 +231,11 @@ resources:
                 # consistent amount = scale up and down automatically
                 BillingMode: PAY_PER_REQUEST
         # query validator
-        # QueryValidator:
-        #     Type: 'AWS::ApiGateway::RequestValidator'
-        #     Properties:
-        #         Name: ParameterRequestValidator
-        #         RestApiId:
-        #             Ref: ApiGatewayRestApi
-        #         ValidateRequestBody: false
-        #         ValidateRequestParameters: true
+        QueryValidator:
+            Type: 'AWS::ApiGateway::RequestValidator'
+            Properties:
+                Name: ParameterRequestValidator
+                RestApiId:
+                    Ref: ApiGatewayRestApi
+                ValidateRequestBody: false
+                ValidateRequestParameters: true
