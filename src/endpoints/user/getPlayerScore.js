@@ -6,7 +6,8 @@ const { dynamoError } = require('../../common/helper/errorHandling');
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME;
 exports.handler = async (event) => {
 	try {
-		let { ID = '' } = event.pathParameters.id;
+		console.log(event.pathParameters);
+		let { ID = '' } = event.pathParameters;
 		console.log();
 		if (!event.pathParameters || !ID) return Responses._400({ message: `${await dynamoError('noId', USER_TABLE_NAME)}` });
 
