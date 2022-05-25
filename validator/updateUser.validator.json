@@ -7,8 +7,7 @@
             "description": "New Player Score",
             "type": "integer",
             "minimum": 0,
-            "default": 0,
-            "message": "New Player Score must be a number and greater than 0"
+            "default": 0
           }
       },
       "required": ["score"]
