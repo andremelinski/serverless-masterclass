@@ -13,11 +13,11 @@ exports.handler = async (event) => {
 			return Responses._400({ message });
 		}
 
+		console.log({ score });
 		if (!score) {
 			const message = await dynamoError('fetching', USER_TABLE_NAME, ID);
 			return Responses._400({ message });
 		}
-		console.log({ score });
 
 		const message = await Dynamo.update({
 			tableName,
