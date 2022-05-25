@@ -39,7 +39,7 @@ const Dynamo = {
 				':updateValue': updateValue,
 			},
 		};
-		return await documentClient.put(params).promise();
+		return await documentClient.update(params).promise();
 	},
 };
 module.exports = Dynamo;
