@@ -5,10 +5,10 @@ const { dynamoError } = require('../../common/helper/errorHandling');
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME;
 exports.handler = async (event) => {
-	const userId = event.pathParameters.id;
+	const { ID = '' } = event.pathParameters;
 	const { score } = event.body;
 
-	if (!userId) {
+	if (!ID) {
 		const message = await dynamoError('noId', USER_TABLE_NAME);
 		return Responses._400({ message });
 	}
@@ -21,6 +21,7 @@ exports.handler = async (event) => {
 	const message = await Dynamo.update({
 		tableName,
 		primaryKey: 'ID',
+		primaryKeyValue: ID,
 		updateKey: 'score',
 		updateValue: score,
 	});

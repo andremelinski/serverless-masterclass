@@ -162,7 +162,7 @@ functions:
         description: updating user score in DynamoDB
         events:
             - http:
-                  path: update-user-score/{id}
+                  path: update-user-score/{ID}
                   reqValidatorName: QueryValidator
                   method: PUT
                   cors: true
