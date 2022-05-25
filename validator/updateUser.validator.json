@@ -1,11 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "NewUserValidation",
+      "title": "NewScoreValidation",
       "type": "object",
       "properties": {
-          "id": {
-              "type": "string"
+            "score": {
+            "description": "New Player Score",
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
           }
       },
-      "required": ["id"]
+      "required": ["score"]
   }
