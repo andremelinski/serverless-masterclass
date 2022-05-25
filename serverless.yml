@@ -38,12 +38,12 @@ provider:
         #         rateLimit: 5 #avr of 5 times/second
         #         burstLimit: 20 #max of 20 times/second
     environment:
-        FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+        # FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
         REGION: ${self:custom.region}
         USER_TABLE_NAME: ${self:custom.userTableName}
 
 custom:
-    fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
+    # fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-3211232345
     region: ${self:provider.region}
     userTableName: player-${self:provider.stage}
 
@@ -56,49 +56,49 @@ package:
 
 functions:
     # File Upload Project
-    s3FileUploader:
-        handler: src/endpoints/images/imageUpload.handler
-        name: s3-file-uploader
-        description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
-        events:
-            - http:
-                  path: images
-                  method: POST
-                  cors: true
-        iamRoleStatements:
-            - Effect: Allow
-              Action:
-                  - 's3:Put*'
-              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-    s3FileGetAll:
-        handler: src/endpoints/images/getImages.handler
-        name: s3-file-get
-        description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
-        events:
-            - http:
-                  path: images
-                  method: GET
-                  cors: true
-                  private: true
-        iamRoleStatements:
-            - Effect: Allow
-              Action:
-                  - 's3:Get*'
-              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-    s3FileDelete:
-        handler: src/endpoints/images/deleteImage.handler
-        name: s3-file-delete
-        description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
-        events:
-            - http:
-                  path: file/{fileKey}
-                  method: DELETE
-                  cors: true
-        iamRoleStatements:
-            - Effect: Allow
-              Action:
-                  - 's3:DeleteObject'
-              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    # s3FileUploader:
+    #     handler: src/endpoints/images/imageUpload.handler
+    #     name: s3-file-uploader
+    #     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
+    #     events:
+    #         - http:
+    #               path: images
+    #               method: POST
+    #               cors: true
+    #     iamRoleStatements:
+    #         - Effect: Allow
+    #           Action:
+    #               - 's3:Put*'
+    #           Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    # s3FileGetAll:
+    #     handler: src/endpoints/images/getImages.handler
+    #     name: s3-file-get
+    #     description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
+    #     events:
+    #         - http:
+    #               path: images
+    #               method: GET
+    #               cors: true
+    #               private: true
+    #     iamRoleStatements:
+    #         - Effect: Allow
+    #           Action:
+    #               - 's3:Get*'
+    #           Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    # s3FileDelete:
+    # handler: src/endpoints/images/deleteImage.handler
+    # name: s3-file-delete
+    # description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
+    # events:
+    #     - http:
+    #           path: file/{fileKey}
+    #           method: DELETE
+    #           cors: true
+    # iamRoleStatements:
+    #     - Effect: Allow
+    #       Action:
+    #           - 's3:DeleteObject'
+    #       Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
     # DynamoDB Project
     getUser:
         handler: src/endpoints/user/getUser.handler
@@ -207,13 +207,13 @@ functions:
 
 resources:
     Resources:
-        FileBucket:
-            Type: AWS::S3::Bucket
-            Properties:
-                BucketName: ${self:custom.fileUploadBucketName}
-                AccessControl: PublicRead
-                VersioningConfiguration:
-                    Status: Enabled
+        # FileBucket:
+        #     Type: AWS::S3::Bucket
+        #     Properties:
+        #         BucketName: ${self:custom.fileUploadBucketName}
+        #         AccessControl: PublicRead
+        #         VersioningConfiguration:
+        #             Status: Enabled
         # Dynamo
         MyDynamoDBTable:
             Type: AWS::DynamoDB::Table
