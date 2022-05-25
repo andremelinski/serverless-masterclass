@@ -13,8 +13,7 @@ exports.handler = async (event) => {
 			console.log('error in Dynamo Get', err);
 			return null;
 		});
-		console.log(USER_TABLE_NAME);
-		console.log(user);
+
 		if (!user) return Responses._400({ message: `${await dynamoError('fetching', USER_TABLE_NAME, ID)}` });
 
 		return Responses._200({ user });

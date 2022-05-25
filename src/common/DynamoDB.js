@@ -11,7 +11,7 @@ const Dynamo = {
 			},
 		};
 
-		const data = documentClient.get(params).promise();
+		const data = await documentClient.get(params).promise();
 
 		if (!data || !data.Item) throw new Error(await dynamoError('fetching', TableName, ID));
 		return data.Item;
@@ -24,7 +24,7 @@ const Dynamo = {
 			TableName,
 			Item: data,
 		};
-		const res = documentClient.put(params).promise();
+		const res = await documentClient.put(params).promise();
 
 		if (!res) throw new Error(await dynamoError('inserting', TableName, data));
 		return data;
@@ -39,7 +39,7 @@ const Dynamo = {
 				':updateValue': updateValue,
 			},
 		};
-		return documentClient.put(params).promise();
+		return await documentClient.put(params).promise();
 	},
 };
 module.exports = Dynamo;
