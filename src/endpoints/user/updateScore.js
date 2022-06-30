@@ -6,14 +6,17 @@ const { dynamoError } = require('../../common/helper/errorHandling');
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME;
 exports.handler = async (event) => {
 	try {
-		const { ID = '' } = event.pathParameters;
-		const { score } = JSON.parse(event.body);
+		const {
+			body,
+			pathParameters: { ID = '' },
+		} = event;
+		const { score } = JSON.parse(body);
+
 		if (!ID) {
 			const message = await dynamoError('noId', USER_TABLE_NAME);
 			return Responses._400({ message });
 		}
 
-		console.log({ score });
 		if (!score) {
 			const message = await dynamoError('fetching', USER_TABLE_NAME, ID);
 			return Responses._400({ message });

@@ -162,11 +162,14 @@ functions:
         description: updating user score in DynamoDB
         events:
             - http:
-                  path: update-user-score/{ID}
+                  path: update-user-score
                   #   reqValidatorName: QueryValidator
                   method: PUT
                   cors: true
                   request:
+                      parameters:
+                          querystrings:
+                              ID: true
                       schemas:
                           application/json:
                               schema: ${file(./validator/updateUser.validator.json)}
@@ -179,6 +182,31 @@ functions:
               Resource: '*'
     # PutItem: Creates a new item, or replaces an old item with a new item.
     # UpdateItem: Edits an existing item's attributes, or adds a new item to the table if it does not already exist. You can put, delete, or add attribute values.
+    getGameScore:
+        handler: src/endpoints/user/getByGameScore.handler
+        name: getByGameScore-DynamoDB
+        description: adding a second DynamoDB query
+        events:
+            - http:
+                  path: get-by-score
+                  #   reqValidatorName: QueryValidator
+                  method: GET
+                  cors: true
+                  request:
+                      parameters:
+                          querystrings:
+                              game: true
+                      schemas:
+                          application/json:
+                              schema: ${file(./validator/updateUser.validator.json)}
+                              name: UpdateUserScore
+                              description: 'Validation model for score update'
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - dynamodb:*
+              Resource: '*'
+
     sendEmail:
         handler: src/common/sendEmailTemplate.handler
         name: SendEmail
@@ -222,13 +250,22 @@ resources:
                 AttributeDefinitions:
                     - AttributeName: ID # ID is the unique identifier
                       AttributeType: S # unique
+                    - AttributeName: game
+                      AttributeType: S # unique
                 KeySchema:
                     - AttributeName: ID
                       KeyType: HASH
                 # How we allow AWS to write, get from this table
                 # consistent amount = scale up and down automatically
                 BillingMode: PAY_PER_REQUEST
-        # query validator
+                GlobalSecondaryIndexes:
+                    - IndexName: game-index
+                      KeySchema:
+                          - AttributeName: game
+                            KeyType: HASH
+                      Projection:
+                          ProjectionType: ALL
+        # query validator not working yet
         # QueryValidator:
         #     Type: 'AWS::ApiGateway::RequestValidator'
         #     Properties:
