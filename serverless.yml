@@ -196,11 +196,6 @@ functions:
                       parameters:
                           querystrings:
                               game: true
-                      schemas:
-                          application/json:
-                              schema: ${file(./validator/updateUser.validator.json)}
-                              name: UpdateUserScore
-                              description: 'Validation model for score update'
         iamRoleStatements:
             - Effect: Allow
               Action:
