@@ -7,11 +7,7 @@
 			"description": "New Player Score",
 			"type": "integer",
 			"minimum": 0,
-			"default": 0,
-			"message": {
-				"required": "score is Required Property",
-				"pattern": "score must be a positive integer"
-			}
+			"default": 0
 		}
 	},
 	"required": ["Score"]
