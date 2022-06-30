@@ -7,7 +7,13 @@
 			"description": "New Player Score",
 			"type": "integer",
 			"minimum": 0,
-			"default": 0
+			"default": 0,
+			"errors": [
+				{
+					"valid": false,
+					"error": "Score not found or not pos"
+				}
+			]
 		}
 	},
 	"required": ["Score"]
