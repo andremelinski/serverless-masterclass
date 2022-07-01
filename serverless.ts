@@ -21,7 +21,7 @@ const serverlessConfiguration: AWS = {
 	// import the function via paths
 	functions: {
 		getCityInfo: {
-			handler: `src/functions/city/handler.getCityInfo`,
+			handler: `src/functions/city/getCityInfo.handler`,
 			events: [
 				{
 					http: {
