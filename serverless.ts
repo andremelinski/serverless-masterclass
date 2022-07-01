@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
 import schema from './src/global/schema/city.schema';
-import getCityInfo from '@functions/city';
+// import getCityInfo from '@functions/city';
 
 const serverlessConfiguration: AWS = {
 	service: 'serverless-masterclass',
