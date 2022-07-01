@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-
+import schema from './src/global/schema/city.schema';
 import getCityInfo from '@functions/city';
 
 const serverlessConfiguration: AWS = {
@@ -19,7 +19,25 @@ const serverlessConfiguration: AWS = {
 		},
 	},
 	// import the function via paths
-	functions: { getCityInfo },
+	functions: {
+		getCityInfo: {
+			handler: `src/functions/city/handler.getCityInfo`,
+			events: [
+				{
+					http: {
+						method: 'get',
+						cors: true,
+						path: 'get-city/{city}',
+						request: {
+							schemas: {
+								'application/json': schema,
+							},
+						},
+					},
+				},
+			],
+		},
+	},
 	package: { individually: true },
 	custom: {
 		esbuild: {
