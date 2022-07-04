@@ -1,11 +1,12 @@
-import type { ValidatedEventAPIGatewayProxyEvent } from '../../libs/api-gateway';
-
+// import type { ValidatedEventAPIGatewayProxyEvent } from '../../libs/api-gateway';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 import schema from '../../global/schema/city.schema';
 import { CitiesRepository } from 'src/global/repositories/city.repository';
 import { Responses } from 'src/global/apiGatewayResponses';
 const cityRepository = new CitiesRepository();
 const response = new Responses();
-export const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+// export const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+export const handler: APIGatewayProxyHandler = async (event, _context) => {
 	try {
 		const city = event.pathParameters?.city;
 		if (!city) {
