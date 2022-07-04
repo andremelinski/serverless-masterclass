@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import schema from './src/global/schema/city.schema';
+// import schema from './src/global/schema/city.schema';
 // import getCityInfo from '@functions/city';
 
 const serverlessConfiguration: AWS = {
