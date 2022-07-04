@@ -8,6 +8,7 @@ const serverlessConfiguration: AWS = {
 	plugins: ['serverless-esbuild'],
 	provider: {
 		name: 'aws',
+		profile: 'andreluiz',
 		runtime: 'nodejs14.x',
 		apiGateway: {
 			minimumCompressionSize: 1024,
@@ -28,11 +29,11 @@ const serverlessConfiguration: AWS = {
 						method: 'get',
 						cors: true,
 						path: 'get-city/{city}',
-						request: {
-							schemas: {
-								'application/json': schema,
-							},
-						},
+						// request: {
+						// 	schemas: {
+						// 		'application/json': schema,
+						// 	},
+						// },
 					},
 				},
 			],

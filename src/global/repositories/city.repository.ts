@@ -4,6 +4,7 @@ import { ICitiesRepository } from './city.interface';
 
 export class CitiesRepository implements ICitiesRepository {
 	async getCityInformation(cityName: string): Promise<CityRepository> {
-		return cities.find((city) => city.name === cityName);
+		const vla = cities.find((city) => city.name === cityName);
+		return vla;
 	}
 }

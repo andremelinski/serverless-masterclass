@@ -9,6 +9,7 @@ const response = new Responses();
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
 	try {
 		const city = event.pathParameters?.city;
+		console.log(city);
 		if (!city) {
 			return response._400({ message: 'Invalid city' });
 		}
