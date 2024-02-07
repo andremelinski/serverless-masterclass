@@ -1,80 +1,104 @@
-service: s3-node-fileupload-serverless
+service: s3-sqs-ts
 
 provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
   region: us-east-1
-  timeout: 10 # seconds
-  memorySize: 128 # mb
+  timeout: 30 # seconds
+  memorySize: 1024 # mb
+  apiGateway:
+    binaryMediaTypes:
+      - 'multipart/form-data'
   environment:
     FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+    QUEUE_NAME: ${self:custom.queue}
+    ACCOUNT_UD: ${self:custom.accountId}
     REGION: ${self:custom.region}
 
 custom:
   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}-321123
   region: ${self:provider.region}
+  queue: mailQueue
+  accountId: 467159351154
 
 plugins:
   - serverless-iam-roles-per-function
-  - serverless-webpack
+  - serverless-plugin-typescript
 
 package:
   individually: true
 
 functions:
-  s3FileUploader:
-    handler: src/endpoints/imageUpload.handler
+  s3HtmlUploader:
+    handler: src/endpoints/template-upload.handler
     name: s3-file-uploader
     description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
     # API GATEWAY
     events:
       - http:
-          path: images
-          method: POST
           cors: true
-    # this lambda will only add file into S3 
+          method: POST
+          path: /template
     iamRoleStatements:
       - Effect: Allow
         Action:
           - "s3:Put*"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  s3FileGetAll:
-    handler: src/endpoints/getAllImages.handler
-    name: s3-file-get
+  getHtml:
+    handler: src/endpoints/get-report.handler
+    name: get-template
     description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
     events:
       - http:
-          path: images
+          path: template/{uuid}
           method: GET
+      - sqs:
+          arn: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
+          batchSize: 10
+          maximumBatchingWindow: 60
+          functionResponseType: ReportBatchItemFailures
     iamRoleStatements:
       - Effect: Allow
         Action:
           - "s3:Get*"
+          - "s3:Put*"
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  s3FileDelete:
-    handler: src/endpoints/deleteImage.handler
-    name: s3-file-delete
-    description: A lambda handler that deletes a file from an S3 bucket based on an API Gateway trigger.
+      - Effect: Allow
+        Action:
+          # - sqs:DeleteMessage
+          # - sqs:ReceiveMessage
+          - sqs:*
+        Resource: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
+  receiver:
+    handler: src/common/ses.handler
+    description: Receive info from queue and send mail
     events:
-      - http:
-          path: file/{fileKey}
-          method: DELETE
+      - sqs:
+          arn: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - "s3:DeleteObject"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-
+          # - sqs:DeleteMessage
+          # - sqs:ReceiveMessage
+          - sqs:*
+        Resource: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
+      - Effect: Allow
+        Action:
+          - ses:*
+        Resource: arn:aws:ses:${self:provider.region}:${self:custom.accountId}
 
   
-
-resources:
-  Resources:
-    FileBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.fileUploadBucketName}
-        AccessControl: PublicRead
-        VersioningConfiguration:
-          Status: Enabled
+# resources:
+#   Resources:
+#     receiverQueue:
+#       Type: AWS::SQS::Queue
+#       Properties:
+#         QueueName: mailsqs
+    # FileBucket:
+    #   Type: AWS::S3::Bucket
+    #   Properties:
+    #     BucketName: ${self:custom.fileUploadBucketName}
+    #     AccessControl: PublicRead
+    #     VersioningConfiguration:
+    #       Status: Enabled

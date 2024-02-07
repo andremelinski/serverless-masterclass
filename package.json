@@ -1,14 +1,19 @@
 {
-  "main": "webpack.config.js",
-  "devDependencies": {
-    "serverless-iam-roles-per-function": "^3.2.0"
-  },
-  "dependencies": {
-    "aws-sdk": "^2.846.0",
-    "dotenv": "^16.0.0",
-    "file-type": "^16.5.1",
-    "serverless-webpack": "^5.6.1",
-    "uuid": "^8.3.2",
-    "webpack": "^5.70.0"
-  }
+	"main": "webpack.config.js",
+	"devDependencies": {
+		"@types/aws-lambda": "^8.10.133",
+		"@types/uuid": "^9.0.8",
+		"serverless-iam-roles-per-function": "^3.2.0",
+		"serverless-plugin-typescript": "^2.1.5"
+	},
+	"dependencies": {
+		"aws-lambda": "^1.0.7",
+		"aws-sdk": "^2.1548.0",
+		"chrome-aws-lambda": "^10.1.0",
+		"puppeteer-core": "^10.1.0",
+		"file-type": "^16.5.1",
+		"handlebars": "^4.7.8",
+		"lambda-multipart-parser": "^1.0.1",
+		"uuid": "^9.0.1"
+	}
 }
