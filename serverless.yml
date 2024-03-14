@@ -2,7 +2,7 @@ service: s3-sqs-ts
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs18.x
   stage: dev
   region: us-east-1
   timeout: 30 # seconds
@@ -32,27 +32,14 @@ package:
 functions:
   s3HtmlUploader:
     handler: src/endpoints/template-upload.handler
-    name: s3-file-uploader
-    description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
+    name: sqs-3-file-upload
+    description: A lambda handler that sent a payload to a queue and than upload to s3.
     # API GATEWAY
     events:
       - http:
           cors: true
           method: POST
           path: /template
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - "s3:Put*"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  getHtml:
-    handler: src/endpoints/get-report.handler
-    name: get-template
-    description: A lambda handler that retrieves a file from an S3 bucket based on an API Gateway trigger.
-    events:
-      - http:
-          path: template/{uuid}
-          method: GET
       - sqs:
           arn: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
           batchSize: 10
@@ -66,8 +53,6 @@ functions:
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
       - Effect: Allow
         Action:
-          # - sqs:DeleteMessage
-          # - sqs:ReceiveMessage
           - sqs:*
         Resource: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
   receiver:
@@ -79,15 +64,13 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          # - sqs:DeleteMessage
-          # - sqs:ReceiveMessage
-          - sqs:*
-        Resource: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
+          - "s3:Get*"
+          - "s3:Put*"
+        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
       - Effect: Allow
         Action:
-          - ses:*
-        Resource: arn:aws:ses:${self:provider.region}:${self:custom.accountId}
-
+          - sqs:*
+        Resource: arn:aws:sqs:${self:provider.region}:${self:custom.accountId}:${self:custom.queue}
   
 # resources:
 #   Resources:

@@ -1,40 +1,28 @@
-import { APIGatewayProxyResult, SQSEvent, SQSMessageAttributes } from "aws-lambda";
-import { Responses } from "./API_Responses";
-import { SES } from 'aws-sdk';
-const ses = new SES();
-export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> => {
+import { SQSEvent, SQSMessageAttributes } from "aws-lambda";
+import { S3 } from "aws-sdk";
+const s3 = new S3({ region: 'us-east-1' });
+
+export const handler = async (event: SQSEvent): Promise<void> => {
 	try {
-        console.log({event})
-    for (const record of event.Records) {
-      const messageAttributes: SQSMessageAttributes = record.messageAttributes;
-      console.log('Message Attributtes -->  ', messageAttributes.to.stringValue);
-      console.log('Message Body -->  ', record.body);
-		const emailSettings = {
-			Destination: {
-				ToAddresses: [messageAttributes.to.stringValue!],
-			},
-			Message: {
-				//   could be HTML
-				Body: {
-					Html: { Data: record.body },
-				},
-				Subject: { Data: messageAttributes.subject.stringValue! },
-			},
-			Source: messageAttributes.from.stringValue!,
-		};
+    	for (const record of event.Records) {
+			const messageAttributes: SQSMessageAttributes = record.messageAttributes;
+			console.log('Message Attributtes -->  ', messageAttributes.to.stringValue);
+			console.log('Message Body -->  ', record.body);
+			const filePath = `${messageAttributes.filePath.stringValue}/${messageAttributes.fileName.stringValue}`;
 
-            await ses.sendEmail(emailSettings).promise();
+			const params = {
+				Bucket: messageAttributes.bucketName.stringValue!,
+				Key: filePath,
+				Body: record.body,
+				ContentType: messageAttributes.ContentType.stringValue,
+				ACL: 'public-read',
+			};
+			await s3.upload(params).promise();
 
-            // await sqs
-			// 	.deleteMessage({
-			// 		QueueUrl: process.env.QUEUE_URL,
-			// 		ReceiptHandle: record.receiptHandle,
-			// 	})
-			// 	.promise();
+			const url = `https://${messageAttributes.bucketName.stringValue}.s3.amazonaws.com/${filePath}`;
+			console.log(url)
 		}
-		return Responses._200({ message: "done" });
 	} catch (err) {
 		console.log(err);
-		return Responses._400({ message: `message:${err.message} stack: ${err.stack}` });
 	}
 };

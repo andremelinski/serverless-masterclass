@@ -1,13 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 const parser = require('lambda-multipart-parser');
-import { S3 } from 'aws-sdk';
+import { SQS } from 'aws-sdk';
 import { Responses } from '../common/API_Responses';
-import { v4 } from 'uuid';
-const s3 = new S3({ region: 'us-east-1' });
+const sqs = new SQS({ region: 'us-east-1' });
 
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME!;
 //  TODO: tem que ser html
-const allowedMimes = ['text/html'];
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 	try {
 		if (!event || !event.body?.length) {
@@ -22,24 +20,30 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 		}
 
 		const fileInfo = parsedBody.files[0];
+		const filePath = `templates/${fileInfo.fileName}`;
 
-		if (!allowedMimes.includes(fileInfo.contentType)) {
-			return Responses._400({ message: 'mime is not allowed ' });
-		}
+		await sqs
+			.sendMessage({
+				QueueUrl: `https://sqs.us-east-1.amazonaws.com/467159351154/queueTest`,
+				MessageBody: Buffer.from(fileInfo.content, 'base64').toString(),
+				MessageAttributes: {
+					bucketName: {
+						StringValue: BUCKET_NAME,
+						DataType: 'String',
+					},
+					filePath: {
+						StringValue: filePath,
+						DataType: 'String',
+					},
+					contentType: {
+						StringValue: fileInfo.contentType,
+						DataType: 'String',
+					},
+				},
+			})
+			.promise();
 
-		const filePath = `templates/${v4()}`;
-
-		const params = {
-			Bucket: BUCKET_NAME,
-			Key: filePath,
-			Body: fileInfo.content,
-			ContentType: fileInfo.contentType,
-			ACL: 'public-read',
-		};
-
-		const uploadResult = await s3.upload(params).promise();
-		const url = `https://${BUCKET_NAME}.s3.amazonaws.com/${filePath}`;
-		return Responses._200({ uploadResult, url });
+		return Responses._200('ok');
 	} catch (error) {
 		console.log('error', error);
 		return Responses._500({ message: error.message });
