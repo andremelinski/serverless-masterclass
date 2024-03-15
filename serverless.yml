@@ -30,9 +30,9 @@ package:
   individually: true
 
 functions:
-  s3HtmlUploader:
+  sendToSQS:
     handler: src/endpoints/template-upload.handler
-    name: sqs-3-file-upload
+    name: file-sqs
     description: A lambda handler that sent a payload to a queue and than upload to s3.
     # API GATEWAY
     events:
