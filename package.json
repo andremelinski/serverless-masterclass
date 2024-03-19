@@ -7,13 +7,14 @@
 		"serverless-plugin-typescript": "^2.1.5"
 	},
 	"dependencies": {
+		"@sparticuz/chromium": "^122.0.0",
 		"aws-lambda": "^1.0.7",
 		"aws-sdk": "^2.1548.0",
 		"chrome-aws-lambda": "^10.1.0",
-		"puppeteer-core": "^10.1.0",
 		"file-type": "^16.5.1",
 		"handlebars": "^4.7.8",
 		"lambda-multipart-parser": "^1.0.1",
+		"puppeteer-core": "^10.4.0",
 		"uuid": "^9.0.1"
 	}
 }

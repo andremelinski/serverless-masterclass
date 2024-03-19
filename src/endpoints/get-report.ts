@@ -4,7 +4,8 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { getUUID } from '../common/get-uuid';
 import { v4 } from 'uuid';
 import handlebars from 'handlebars';
-const chromium = require('chrome-aws-lambda');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 
 const sqs = new SQS();
 const s3 = new S3();
@@ -23,11 +24,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 				Key: `templates/${uuid}`,
 			})
 			.promise();
-
-		const payload = output.Body?.toString() || '';
-
-		const buffer = Buffer.from(payload, 'utf-8').toString();
-
+			const payload = output.Body!.toString();
+			console.log(payload);
+			const buffer = Buffer.from(payload, 'utf-8').toString()
+			
 		// const response = await pdf.create(document, options).then();
 		const data = {
 			nome: ' Pdf generation using puppeteer',
@@ -36,29 +36,29 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 		const template = handlebars.compile(buffer);
 		const html = template(data);
 
-		const browser = await chromium.puppeteer.launch({
+		const browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
+        executablePath: await chromium.executablePath(),
         headless: true,
         ignoreHTTPSErrors: true
       });
 		const page = await browser.newPage();
-		page.setContent(html);
-
+		await page.setContent(html, {
+			waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
+		});
+    	await page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
 		const response = await page.pdf({
 			format: 'A4',
 			printBackground: true,
 			margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' },
 		});
-
+		await browser.close();
 		const filePath = `templates/${v4()}`;
-
-
 
 		await sqs
 			.sendMessage({
-				QueueUrl: `https://sqs.us-east-1.amazonaws.com/467159351154/queueTest`,
+				QueueUrl: `https://sqs.us-east-1.amazonaws.com/467159351154/mailQueue`,
 				MessageBody: '<h1>Hello word<h1/>',
 				MessageAttributes: {
 					to: {

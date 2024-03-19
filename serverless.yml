@@ -2,7 +2,7 @@ service: s3-sqs-ts
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs18.x
   stage: dev
   region: us-east-1
   timeout: 30 # seconds
